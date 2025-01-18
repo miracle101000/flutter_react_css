@@ -10,7 +10,8 @@
     "flutter",
     "css",
     "components",
-    "ui"],
+    "ui"
+  ],
   "author": "OKOLO MIRACLE ECHEZONA okolomiracle101000@gmail.com",
   "license": "MIT",
   "publishConfig": {

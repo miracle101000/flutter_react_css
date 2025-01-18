@@ -1,16 +1,18 @@
 {
   "compilerOptions": {
     "target": "ES6",
-    "module": "ESNext",
-    "lib": ["DOM", "ESNext"],
+    "module": "ESNext",       // Leave as "ESNext" if you're targeting ES Modules
+    "lib": ["DOM", "ESNext"], // Ensure access to DOM and latest ECMAScript features
     "jsx": "react",
-    "moduleResolution": "Node",
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "outDir": "dist",
-    "declaration": true
+    "moduleResolution": "Node",  // Use Node module resolution strategy
+    "strict": true,             // Enable strict type checking
+    "esModuleInterop": true,    // Enable compatibility with CommonJS modules
+    "skipLibCheck": true,       // Skip library type checks
+    "outDir": "dist",           // Output directory for compiled JS files
+    "declaration": true,        // Generate type declaration files
+    "declarationDir": "types",  // Optionally separate type files (if desired)
+    "forceConsistentCasingInFileNames": true // Enforce consistent file casing
   },
-  "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/**/*"],      // Include all TypeScript files in the src directory
+  "exclude": ["node_modules", "dist"] // Exclude node_modules and dist folders
 }

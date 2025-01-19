@@ -246,10 +246,17 @@ import { Carousel } from "flutter-react-css";
 
 const MyComponent = () => (
   <Carousel
+    height="400px"
+    aspectRatio={1.5}
+    initialPage={0}
     autoPlay={true}
-    interval={3000}
-    items={["Item 1", "Item 2", "Item 3"]}
-  />
+    autoPlayInterval={3000}
+    onPageChanged={(index) => console.log("Page changed to:", index)}
+  >
+    <img src="slide1.jpg" alt="Slide 1" />
+    <img src="slide2.jpg" alt="Slide 2" />
+    <img src="slide3.jpg" alt="Slide 3" />
+  </Carousel>
 );
 ```
 

@@ -1,3 +1,11 @@
+import React from "react";
+
+interface TransformRotateProps {
+  angle: number;
+  origin?: string;
+  children: React.ReactNode;
+}
+
 /**
  * A component that rotates its children by a specified angle, similar to Flutter's Transform.rotate.
  *
@@ -12,14 +20,6 @@
  * </TransformRotate>
  * ```
  */
-import React from "react";
-
-interface TransformRotateProps {
-  angle: number;
-  origin?: string;
-  children: React.ReactNode;
-}
-
 export const TransformRotate: React.FC<TransformRotateProps> = ({
   angle,
   origin = "center",

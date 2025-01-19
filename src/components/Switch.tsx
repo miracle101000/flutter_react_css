@@ -1,5 +1,15 @@
 import React from "react";
 
+interface SwitchProps {
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+  disabled?: boolean;
+  color?: string;
+  size?: "small" | "medium";
+  trackColor?: string;
+  thumbColor?: string;
+}
+
 /**
  * A material design switch widget that toggles between two states (on/off).
  * You can customize the appearance, color, and behavior of the switch based on user interaction.
@@ -26,16 +36,6 @@ import React from "react";
  * - `trackColor`: The color of the track (background) when the switch is off.
  * - `thumbColor`: The color of the thumb (circular button) when the switch is on.
  */
-interface SwitchProps {
-  checked: boolean;
-  onChange: (checked: boolean) => void;
-  disabled?: boolean;
-  color?: string;
-  size?: "small" | "medium";
-  trackColor?: string;
-  thumbColor?: string;
-}
-
 const Switch = ({
   checked,
   onChange,

@@ -1,3 +1,11 @@
+import React from "react";
+
+interface TransformTranslateProps {
+  offsetX: number;
+  offsetY: number;
+  children: React.ReactNode;
+}
+
 /**
  * A component that translates (moves) its children by specified offsets, similar to Flutter's Transform.translate.
  *
@@ -12,14 +20,6 @@
  * </TransformTranslate>
  * ```
  */
-import React from "react";
-
-interface TransformTranslateProps {
-  offsetX: number;
-  offsetY: number;
-  children: React.ReactNode;
-}
-
 export const TransformTranslate: React.FC<TransformTranslateProps> = ({
   offsetX,
   offsetY,

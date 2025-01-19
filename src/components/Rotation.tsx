@@ -5,7 +5,7 @@ interface RotationProps {
   children: React.ReactNode;
 }
 
-const StaticRotation: React.FC<RotationProps> = ({ turns, children }) => {
+const Rotation: React.FC<RotationProps> = ({ turns, children }) => {
   // Convert turns into degrees (360 degrees * turns)
   const rotationAngle = turns * 360;
 
@@ -18,4 +18,4 @@ const StaticRotation: React.FC<RotationProps> = ({ turns, children }) => {
   return <div style={staticStyle}>{children}</div>;
 };
 
-export default StaticRotation;
+export default Rotation;

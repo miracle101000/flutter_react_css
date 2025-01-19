@@ -35,5 +35,7 @@ export { default as TabBar } from "./components/TabBar";
 export { default as Switch } from "./components/Switch";
 export { default as Divider } from "./components/Divider";
 export { default as ClipRRect } from "./components/ClipRRect";
+export { default as Center } from "./components/Center";
+export { default as Align } from "./components/Align";
 export { default as CircularProgressIndicator} from "./components/CircularProgressIndicator";
 

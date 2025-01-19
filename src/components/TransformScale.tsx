@@ -1,3 +1,11 @@
+import React from "react";
+
+interface TransformScaleProps {
+  scale: number;
+  origin?: string;
+  children: React.ReactNode;
+}
+
 /**
  * A component that scales its children by a specified factor, similar to Flutter's Transform.scale.
  *
@@ -12,14 +20,6 @@
  * </TransformScale>
  * ```
  */
-import React from "react";
-
-interface TransformScaleProps {
-  scale: number;
-  origin?: string;
-  children: React.ReactNode;
-}
-
 export const TransformScale: React.FC<TransformScaleProps> = ({
   scale,
   origin = "center",

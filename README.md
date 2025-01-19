@@ -1,27 +1,3 @@
-Here is the updated `README.md` with the name `flutter_react_css` and the MIT license:
-
-````markdown
-# flutter_react_css
-
-A React component library designed to help Flutter developers style React components easily, inspired by the Flutter widget-based approach. This library simplifies working with React's CSS by providing components that avoid the need for complex CSS stylesheets, making React development more approachable for Flutter developers.
-
-## Installation
-
-To install the library, you can use npm or yarn.
-
-### npm
-
-```bash
-npm install flutter_react_css
-```
-````
-
-### yarn
-
-```bash
-yarn add flutter_react_css
-```
-
 ## Components
 
 This library provides a wide range of UI components that you can import and use in your React projects.

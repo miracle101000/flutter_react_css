@@ -28,10 +28,14 @@ type AnimatedContainerProps = {
   borderBottomLeftRadius?: string | number;
   borderBottomRightRadius?: string | number;
   border?: string;
-  borderTop?: string;
-  borderRight?: string;
-  borderBottom?: string;
-  borderLeft?: string;
+  borderTop?: string; // Static border color for top
+  borderRight?: string; // Static border color for right
+  borderBottom?: string; // Static border color for bottom
+  borderLeft?: string; // Static border color for left
+  borderTopGradient?: string; // Gradient border for top
+  borderRightGradient?: string; // Gradient border for right
+  borderBottomGradient?: string; // Gradient border for bottom
+  borderLeftGradient?: string; // Gradient border for left
   shadow?: "sm" | "md" | "lg";
   boxShadow?: string;
   linearGradient?: string;
@@ -43,6 +47,7 @@ type AnimatedContainerProps = {
   as?: keyof JSX.IntrinsicElements;
   animationDuration?: number; // Added to control the duration of the animation
   transform?: string; // Added for transform animations
+  borderThickness?: string | number; // Border thickness (new)
 };
 
 /**
@@ -50,63 +55,21 @@ type AnimatedContainerProps = {
  *
  * Example usage:
  * ```tsx
- * // Basic container with padding, margin, background color, and shadow
  * <AnimatedContainer
  *   padding={20}
  *   margin={10}
  *   backgroundColor="lightblue"
  *   borderRadius={10}
+ *   borderThickness={2} // Added border thickness
+ *   borderTopGradient="linear-gradient(to right, green, blue)" // Added top border gradient
+ *   borderRightGradient="linear-gradient(to right, purple, pink)" // Added right border gradient
+ *   borderBottomGradient="linear-gradient(to right, orange, cyan)" // Added bottom border gradient
+ *   borderLeftGradient="linear-gradient(to right, gray, white)" // Added left border gradient
  *   shadow="md"
  *   width="300px"
  *   height="200px"
  * >
  *   <h1 style={{ textAlign: 'center' }}>Hello World</h1>
- * </AnimatedContainer>
- *
- * // With a linear gradient background
- * <AnimatedContainer
- *   padding={20}
- *   linearGradient="to right, #ff7e5f, #feb47b"
- *   width="100%"
- *   height="100vh"
- * >
- *   <h2 style={{ textAlign: 'center' }}>Welcome to React!</h2>
- * </AnimatedContainer>
- *
- * // With a custom box shadow and padding
- * <AnimatedContainer
- *   boxShadow="0 4px 8px rgba(0, 0, 0, 0.2)"
- *   padding="30px"
- *   width="400px"
- *   height="300px"
- * >
- *   <p>This is a container with a custom box-shadow.</p>
- * </AnimatedContainer>
- *
- * // With transform property applied (scaling and rotation)
- * <AnimatedContainer
- *   padding={20}
- *   margin={10}
- *   backgroundColor="lightgreen"
- *   borderRadius={10}
- *   transform="scale(1.1) rotate(10deg)" // Adding transform
- *   width="300px"
- *   height="200px"
- * >
- *   <h1 style={{ textAlign: 'center' }}>Transformed Container</h1>
- * </AnimatedContainer>
- *
- * // With animation duration control
- * <AnimatedContainer
- *   padding={20}
- *   margin={10}
- *   backgroundColor="lightpink"
- *   borderRadius={15}
- *   animationDuration={700} // Adjust animation duration
- *   width="250px"
- *   height="150px"
- * >
- *   <h3 style={{ textAlign: 'center' }}>Animated Container</h3>
  * </AnimatedContainer>
  * ```
  */
@@ -137,6 +100,10 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   borderRight,
   borderBottom,
   borderLeft,
+  borderTopGradient,
+  borderRightGradient,
+  borderBottomGradient,
+  borderLeftGradient,
   shadow,
   boxShadow,
   linearGradient,
@@ -148,6 +115,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   as = "div",
   animationDuration = 500, // Default to 500ms
   transform, // Added transform prop
+  borderThickness = 1, // Default border thickness
   ...props
 }) => {
   const theme = useTheme();
@@ -205,11 +173,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
             borderBottomLeftRadius || "0"
           } ${borderBottomRightRadius || "0"}`
         : "0"), // Support for border radius
-    border, // Apply border style if provided
-    borderTop, // Apply top border if provided
-    borderRight, // Apply right border if provided
-    borderBottom, // Apply bottom border if provided
-    borderLeft, // Apply left border if provided
+
     boxShadow:
       boxShadow ||
       (shadow === "sm"
@@ -240,32 +204,39 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
       backgroundColor: computedStyles.backgroundColor,
       backgroundImage: computedStyles.backgroundImage,
       borderRadius: computedStyles.borderRadius,
-      border: computedStyles.border,
-      borderTop: computedStyles.borderTop,
-      borderRight: computedStyles.borderRight,
-      borderBottom: computedStyles.borderBottom,
-      borderLeft: computedStyles.borderLeft,
       boxShadow: computedStyles.boxShadow,
-      width: computedStyles.width,
-      height: computedStyles.height,
-      transform: transform || "scale(1)", // Apply transform if provided, default to no transform
+      transform: transform || "scale(1)", // Apply transform animation (e.g., scaling)
+      // Animate each border with its gradient or color
+      borderTop:
+        borderTopGradient ||
+        borderTop ||
+        `${borderThickness}px solid transparent`, // Fallback to default if no gradient or color provided
+      borderRight:
+        borderRightGradient ||
+        borderRight ||
+        `${borderThickness}px solid transparent`,
+      borderBottom:
+        borderBottomGradient ||
+        borderBottom ||
+        `${borderThickness}px solid transparent`,
+      borderLeft:
+        borderLeftGradient ||
+        borderLeft ||
+        `${borderThickness}px solid transparent`,
     },
-    from: {
-      opacity: 0, // Initial opacity set to 0 (fade-in effect)
-      transform: "scale(0.8)", // Initial scale set to 0.8 (grow effect)
+    config: {
+      duration: animationDuration, // Control the duration of the animation
+      easing: easeCubicInOut, // Optional easing function
     },
-    reset: true, // Reset animation when component is re-rendered
-    reverse: true, // Reverse the animation when prop values change
-    config: { duration: animationDuration, easing: easeCubicInOut }, // Smooth cubic easing and adjustable duration
   });
 
-  const Element = as; // Use 'as' prop for custom tag name (defaults to 'div')
-
-  return (
-    <animated.div style={{ ...animatedStyles, ...style }} {...(props as any)}>
-      {children} {/* Render children inside the animated container */}
-    </animated.div>
-  );
+  return React.createElement(as, {
+    ...props,
+    style: {
+      ...animatedStyles, // Apply the animated styles
+      ...computedStyles, // Apply the non-animated styles (e.g., initial properties)
+    },
+  });
 };
 
 export default AnimatedContainer;

@@ -24,9 +24,27 @@ interface ScaffoldProps {
   drawerOpen?: boolean; // Control the drawer's initial open state
   onDrawerToggle?: (isOpen: boolean) => void; // Callback to notify when the drawer is toggled
   drawerDismissible?: boolean; // Whether the drawer is dismissible by the user
+  fabPosition?: "top-left" | "top-right" | "bottom-left" | "bottom-right"; // FAB position
 }
 
-// The Scaffold component that mimics the Flutter Scaffold widget
+/**
+ * A component that positions its child element (FAB) to any of the four corners of the screen
+ * (top-left, top-right, bottom-left, bottom-right), similar to positioning the FAB in Flutter.
+ *
+ * Example usage:
+ * ```tsx
+ * <Scaffold
+ *   fab={<div>+</div>}
+ *   fabPosition="bottom-left"
+ *   appBar={<div>App Bar</div>}
+ *   body={<div>Main Body Content</div>}
+ *   drawer={<div>Drawer Content</div>}
+ *   bottomNav={<div>Bottom Navigation</div>}
+ *   snackBar={<div>Snack Bar Message</div>}
+ * />
+ * ```
+ * In this example, the floating action button (FAB) will be positioned at the bottom-left of the screen.
+ */
 const Scaffold: React.FC<ScaffoldProps> = ({
   appBar,
   body,
@@ -50,6 +68,7 @@ const Scaffold: React.FC<ScaffoldProps> = ({
   drawerOpen = false, // Default drawer state is closed
   onDrawerToggle = () => {}, // Default to no-op callback
   drawerDismissible = true, // Default drawer dismissible state
+  fabPosition = "bottom-right", // Default FAB position
 }) => {
   // State to manage drawer open/close state
   const [isDrawerOpen, setIsDrawerOpen] = useState(drawerOpen);
@@ -104,8 +123,8 @@ const Scaffold: React.FC<ScaffoldProps> = ({
   // Default styling for the floating action button (FAB)
   const fabStyles: CSSProperties = {
     position: "fixed", // Position the FAB at a fixed location
-    bottom: "20px", // Position from the bottom
-    right: "20px", // Position from the right
+    [fabPosition.includes("top") ? "top" : "bottom"]: "20px", // Position from top or bottom
+    [fabPosition.includes("left") ? "left" : "right"]: "20px", // Position from left or right
     width: "56px", // Size of the FAB
     height: "56px", // Size of the FAB
     backgroundColor: fabColor, // Set the FAB background color

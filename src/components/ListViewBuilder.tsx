@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 
 type ScrollDirection = "vertical" | "horizontal";
 type ScrollPhysics = "clamped" | "never" | "bouncy";
@@ -16,7 +16,19 @@ type ListViewBuilderProps = {
   scrollDirection?: ScrollDirection;
   /** Scroll physics of the list */
   physics?: ScrollPhysics;
+  /** Optional callback for getting the scroll controller */
+  scrollControllerRef?: React.Ref<ScrollController>;
 };
+
+/** Scroll controller interface */
+interface ScrollController {
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
+  scrollBy: (x: number, y: number) => void;
+  scrollTo: (x: number, y: number) => void;
+  getCurrentScrollPosition: () => { top: number; left: number };
+  getMaxScrollExtent: () => { maxTop: number; maxLeft: number };
+}
 
 /**
  * A component that renders a list of dynamically generated items based on the `itemCount`
@@ -54,34 +66,78 @@ type ListViewBuilderProps = {
  * and you want to generate each item dynamically using a builder function. It abstracts away
  * the manual rendering of individual items and provides a flexible layout with scrollable options.
  */
-const ListViewBuilder: React.FC<ListViewBuilderProps> = ({
-  itemCount,
-  itemBuilder,
-  style,
-  className,
-  scrollDirection = "vertical",
-  physics = "clamped",
-}) => {
-  const overflowStyle =
-    scrollDirection === "horizontal" ? "overflow-x" : "overflow-y";
-  const physicsStyle = physics === "never" ? "hidden" : "auto";
+const ListViewBuilder = forwardRef<ScrollController, ListViewBuilderProps>(
+  ({
+    itemCount,
+    itemBuilder,
+    style,
+    className,
+    scrollDirection = "vertical",
+    physics = "clamped",
+    scrollControllerRef,
+  }) => {
+    const listRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: scrollDirection === "horizontal" ? "flex" : "block",
-        [overflowStyle]: physicsStyle,
-      }}
-    >
-      {Array.from({ length: itemCount }, (_, index) => (
-        <div key={index}>
-          {itemBuilder(index)} {/* Render each item using the itemBuilder */}
-        </div>
-      ))}
-    </div>
-  );
-};
+    // Adjust overflow behavior based on scrollDirection and physics
+    const overflowStyle =
+      scrollDirection === "horizontal" ? "overflowX" : "overflowY";
+    const physicsStyle = physics === "never" ? "hidden" : "auto";
+
+    // Expose the scroll controller methods using `useImperativeHandle`
+    useImperativeHandle(scrollControllerRef, () => ({
+      scrollToTop: () => {
+        if (listRef.current) listRef.current.scrollTop = 0;
+      },
+      scrollToBottom: () => {
+        if (listRef.current)
+          listRef.current.scrollTop = listRef.current.scrollHeight;
+      },
+      scrollBy: (x, y) => {
+        if (listRef.current) {
+          listRef.current.scrollBy({ left: x, top: y, behavior: "smooth" });
+        }
+      },
+      scrollTo: (x, y) => {
+        if (listRef.current) {
+          listRef.current.scrollTo({ left: x, top: y, behavior: "smooth" });
+        }
+      },
+      getCurrentScrollPosition: () => {
+        return {
+          top: listRef.current?.scrollTop || 0,
+          left: listRef.current?.scrollLeft || 0,
+        };
+      },
+      getMaxScrollExtent: () => {
+        return {
+          maxTop:
+            (listRef.current?.scrollHeight || 0) -
+            (listRef.current?.clientHeight || 0),
+          maxLeft:
+            (listRef.current?.scrollWidth ?? 0) -
+              (listRef.current?.clientWidth || 0) || 0,
+        };
+      },
+    }));
+
+    return (
+      <div
+        ref={listRef}
+        className={className}
+        style={{
+          ...style,
+          display: scrollDirection === "horizontal" ? "flex" : "block",
+          [overflowStyle]: physicsStyle,
+        }}
+      >
+        {Array.from({ length: itemCount }, (_, index) => (
+          <div key={index}>
+            {itemBuilder(index)} {/* Render each item using the itemBuilder */}
+          </div>
+        ))}
+      </div>
+    );
+  }
+);
 
 export default ListViewBuilder;

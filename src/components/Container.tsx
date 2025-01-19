@@ -36,6 +36,16 @@ type ContainerProps = {
   borderRight?: string;
   borderBottom?: string;
   borderLeft?: string;
+  borderThickness?: string | number; // Border thickness for all sides
+  borderColor?: string; // Border color for all sides
+  borderTopThickness?: string | number; // Border thickness for top
+  borderRightThickness?: string | number; // Border thickness for right
+  borderBottomThickness?: string | number; // Border thickness for bottom
+  borderLeftThickness?: string | number; // Border thickness for left
+  borderTopColor?: string; // Border color for top
+  borderRightColor?: string; // Border color for right
+  borderBottomColor?: string; // Border color for bottom
+  borderLeftColor?: string; // Border color for left
   /** Shadow level (sm, md, lg) */
   shadow?: "sm" | "md" | "lg";
   /** Box-shadow property for custom shadow styles */
@@ -59,7 +69,7 @@ type ContainerProps = {
 };
 
 /**
- * A flexible container component for layout and styling with support for gradients and shadows.
+ * A flexible container component for layout and styling.
  *
  * Example usage:
  * ```tsx
@@ -136,6 +146,16 @@ const Container: React.FC<ContainerProps> = ({
   borderRight,
   borderBottom,
   borderLeft,
+  borderThickness,
+  borderColor,
+  borderTopThickness,
+  borderRightThickness,
+  borderBottomThickness,
+  borderLeftThickness,
+  borderTopColor,
+  borderRightColor,
+  borderBottomColor,
+  borderLeftColor,
   shadow,
   boxShadow,
   linearGradient,
@@ -145,7 +165,7 @@ const Container: React.FC<ContainerProps> = ({
   height,
   style,
   as = "div",
-  transform, // Accept transform prop
+  transform,
   ...props
 }) => {
   const theme = useTheme();
@@ -203,11 +223,28 @@ const Container: React.FC<ContainerProps> = ({
             borderBottomLeftRadius || "0"
           } ${borderBottomRightRadius || "0"}`
         : "0"), // Default to no border-radius, or use individual corners
-    border,
-    borderTop,
-    borderRight,
-    borderBottom,
-    borderLeft,
+    border:
+      border || `${borderThickness || "0"} solid ${borderColor || "#000"}`, // Set default border
+    borderTop:
+      borderTop ||
+      `${borderTopThickness || "0"} solid ${
+        borderTopColor || borderColor || "#000"
+      }`, // Top border
+    borderRight:
+      borderRight ||
+      `${borderRightThickness || "0"} solid ${
+        borderRightColor || borderColor || "#000"
+      }`, // Right border
+    borderBottom:
+      borderBottom ||
+      `${borderBottomThickness || "0"} solid ${
+        borderBottomColor || borderColor || "#000"
+      }`, // Bottom border
+    borderLeft:
+      borderLeft ||
+      `${borderLeftThickness || "0"} solid ${
+        borderLeftColor || borderColor || "#000"
+      }`, // Left border
     boxShadow:
       boxShadow ||
       (shadow === "sm"
@@ -217,19 +254,14 @@ const Container: React.FC<ContainerProps> = ({
         : shadow === "lg"
         ? "0px 10px 15px rgba(0, 0, 0, 0.1)"
         : undefined),
-    width: width || "auto", // Default to auto width
-    height: height || "auto", // Default to auto height
-    transform, // Apply the transform property (if provided)
+    width,
+    height,
+    transform, // Apply the transform CSS property
     ...style,
   };
 
-  const Element = as;
-
-  return (
-    <Element style={computedStyles} {...props}>
-      {children}
-    </Element>
-  );
+  // Return the container element
+  return React.createElement(as, { style: computedStyles, ...props }, children);
 };
 
 export default Container;

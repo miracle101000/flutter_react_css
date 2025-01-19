@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 type ScrollDirection = "vertical" | "horizontal";
 type ScrollPhysics = "clamped" | "never" | "bouncy";
+
+interface ScrollController {
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
+  scrollBy: (x: number, y: number) => void;
+  scrollTo: (x: number, y: number) => void;
+  getCurrentScrollPosition: () => { top: number; left: number };
+  getMaxScrollExtent: () => { maxTop: number; maxLeft: number };
+}
 
 type GridViewCountProps = {
   /** The number of items in the grid */
@@ -26,10 +35,11 @@ type GridViewCountProps = {
 
 /**
  * A customizable grid layout component that dynamically generates grid items based on a provided `itemBuilder` function and the total number of items (`itemCount`).
- * Additionally, this component displays the total count of items within the grid.
+ * Additionally, this component displays the total count of items within the grid and provides scroll control.
  *
  * Example usage:
  * ```tsx
+ * const gridRef = useRef<ScrollController>(null);
  * <GridViewCount
  *   itemCount={10}
  *   itemBuilder={(index) => (
@@ -40,30 +50,7 @@ type GridViewCountProps = {
  *   crossAxisCount={3}
  *   mainAxisExtent={100}
  *   spacing={10}
- * />
- * ```
- *
- * Properties:
- * - `itemCount`: The total number of items to render in the grid.
- * - `itemBuilder`: A function that returns a grid item (element) based on its index in the grid.
- * - `style`: Optional inline styles to be applied to the grid container.
- * - `className`: Custom CSS class to be applied to the grid container.
- * - `crossAxisCount`: The number of columns (or rows for vertical direction) in the grid.
- * - `mainAxisExtent`: The fixed height (for vertical scroll) or width (for horizontal scroll) of each grid item.
- * - `spacing`: The space (in pixels) between grid items.
- *
- * @example
- * ```tsx
- * <GridViewCount
- *   itemCount={10}
- *   itemBuilder={(index) => (
- *     <div style={{ backgroundColor: 'red', height: '100px' }}>
- *       Item {index + 1}
- *     </div>
- *   )}
- *   crossAxisCount={3}
- *   mainAxisExtent={100}
- *   spacing={10}
+ *   ref={gridRef}  // Attach the ref for scroll control
  * />
  * ```
  */
@@ -78,6 +65,8 @@ const GridViewCount: React.FC<GridViewCountProps> = ({
   mainAxisExtent,
   spacing = 0,
 }) => {
+  const gridRef = useRef<HTMLDivElement | null>(null);
+
   const overflowStyle =
     scrollDirection === "horizontal" ? "overflow-x" : "overflow-y";
   const physicsStyle = physics === "never" ? "hidden" : "auto";
@@ -90,8 +79,54 @@ const GridViewCount: React.FC<GridViewCountProps> = ({
     ...style,
   };
 
+  // ScrollController methods
+  const scrollController: ScrollController = {
+    scrollToTop: () => {
+      if (gridRef.current) {
+        gridRef.current.scrollTo({ top: 0, left: 0 });
+      }
+    },
+    scrollToBottom: () => {
+      if (gridRef.current) {
+        gridRef.current.scrollTo({
+          top: gridRef.current.scrollHeight,
+          left: gridRef.current.scrollWidth,
+        });
+      }
+    },
+    scrollBy: (x, y) => {
+      if (gridRef.current) {
+        gridRef.current.scrollBy({ left: x, top: y });
+      }
+    },
+    scrollTo: (x, y) => {
+      if (gridRef.current) {
+        gridRef.current.scrollTo({ left: x, top: y });
+      }
+    },
+    getCurrentScrollPosition: () => {
+      return {
+        top: gridRef.current ? gridRef.current.scrollTop : 0,
+        left: gridRef.current ? gridRef.current.scrollLeft : 0,
+      };
+    },
+    getMaxScrollExtent: () => {
+      return {
+        maxTop: gridRef.current ? gridRef.current.scrollHeight : 0,
+        maxLeft: gridRef.current ? gridRef.current.scrollWidth : 0,
+      };
+    },
+  };
+
+  // Expose ScrollController via ref
+  useEffect(() => {
+    if (gridRef.current) {
+      (gridRef.current as any).scrollController = scrollController;
+    }
+  }, []);
+
   return (
-    <div className={className} style={gridStyle}>
+    <div ref={gridRef} className={className} style={gridStyle}>
       {Array.from({ length: itemCount }, (_, index) => (
         <div key={index} style={{ height: mainAxisExtent }}>
           {itemBuilder(index)} {/* Render each item */}

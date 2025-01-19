@@ -1,4 +1,14 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
+
+// Scroll Controller Interface
+interface ScrollController {
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
+  scrollBy: (x: number, y: number) => void;
+  scrollTo: (x: number, y: number) => void;
+  getCurrentScrollPosition: () => { top: number; left: number };
+  getMaxScrollExtent: () => { maxTop: number; maxLeft: number };
+}
 
 type ScrollDirection = "vertical" | "horizontal";
 type ScrollPhysics = "clamped" | "never" | "bouncy";
@@ -22,6 +32,8 @@ type GridViewBuilderProps = {
   mainAxisExtent?: number;
   /** Spacing between grid items */
   spacing?: number;
+  /** Scroll controller ref for programmatically controlling scroll */
+  scrollControllerRef?: React.RefObject<ScrollController>;
 };
 
 /**
@@ -74,6 +86,7 @@ type GridViewBuilderProps = {
  * - `crossAxisCount`: The number of columns (or rows for vertical direction) in the grid.
  * - `mainAxisExtent`: The fixed height (for vertical scroll) or width (for horizontal scroll) of each grid item.
  * - `spacing`: The space (in pixels) between grid items.
+ * - `scrollControllerRef`: A reference to control the grid's scroll programmatically. Allows scrolling to top, bottom, or other specific positions.
  */
 const GridViewBuilder: React.FC<GridViewBuilderProps> = ({
   itemCount,
@@ -85,7 +98,10 @@ const GridViewBuilder: React.FC<GridViewBuilderProps> = ({
   crossAxisCount,
   mainAxisExtent,
   spacing = 0,
+  scrollControllerRef,
 }) => {
+  const gridContainerRef = useRef<HTMLDivElement>(null);
+
   const overflowStyle =
     scrollDirection === "horizontal" ? "overflow-x" : "overflow-y";
   const physicsStyle = physics === "never" ? "hidden" : "auto";
@@ -98,8 +114,68 @@ const GridViewBuilder: React.FC<GridViewBuilderProps> = ({
     ...style,
   };
 
+  // Scroll methods
+  const scrollToTop = () => {
+    gridContainerRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
+
+  const scrollToBottom = () => {
+    const maxScrollTop = gridContainerRef.current?.scrollHeight || 0;
+    gridContainerRef.current?.scrollTo({
+      top: maxScrollTop,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollBy = (x: number, y: number) => {
+    gridContainerRef.current?.scrollBy({ left: x, top: y, behavior: "smooth" });
+  };
+
+  const scrollTo = (x: number, y: number) => {
+    gridContainerRef.current?.scrollTo({ left: x, top: y, behavior: "smooth" });
+  };
+
+  const getCurrentScrollPosition = () => {
+    if (gridContainerRef.current) {
+      return {
+        top: gridContainerRef.current.scrollTop,
+        left: gridContainerRef.current.scrollLeft,
+      };
+    }
+    return { top: 0, left: 0 };
+  };
+
+  const getMaxScrollExtent = () => {
+    if (gridContainerRef.current) {
+      return {
+        maxTop:
+          gridContainerRef.current.scrollHeight -
+          gridContainerRef.current.clientHeight,
+        maxLeft:
+          gridContainerRef.current.scrollWidth -
+          gridContainerRef.current.clientWidth,
+      };
+    }
+    return { maxTop: 0, maxLeft: 0 };
+  };
+
+  // Expose the scroll methods to the parent via the ref
+  useEffect(() => {
+    if (scrollControllerRef && gridContainerRef.current) {
+      scrollControllerRef.current = {
+        scrollToTop,
+        scrollToBottom,
+        scrollBy,
+        scrollTo,
+        getCurrentScrollPosition,
+        getMaxScrollExtent,
+      };
+    }
+  }, [scrollControllerRef]);
+
   return (
-    <div className={className} style={gridStyle}>
+    <div className={className} style={gridStyle} ref={gridContainerRef}>
       {Array.from({ length: itemCount }, (_, index) => (
         <div key={index} style={{ height: mainAxisExtent }}>
           {itemBuilder(index)} {/* Render each item using the itemBuilder */}

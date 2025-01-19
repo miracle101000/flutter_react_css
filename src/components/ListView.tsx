@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef, useImperativeHandle, forwardRef } from "react";
 
 type ScrollDirection = "vertical" | "horizontal";
 type ScrollPhysics = "clamped" | "never" | "bouncy";
@@ -14,7 +14,19 @@ type ListViewProps = {
   scrollDirection?: ScrollDirection;
   /** Scroll physics of the list */
   physics?: ScrollPhysics;
+  /** Optional callback for getting the scroll controller */
+  scrollControllerRef?: React.Ref<ScrollController>;
 };
+
+/** Scroll controller interface */
+interface ScrollController {
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
+  scrollBy: (x: number, y: number) => void;
+  scrollTo: (x: number, y: number) => void;
+  getCurrentScrollPosition: () => { top: number; left: number };
+  getMaxScrollExtent: () => { maxTop: number; maxLeft: number };
+}
 
 /**
  * A component that renders a list of items with customizable scroll behavior and layout direction.
@@ -50,29 +62,76 @@ type ListViewProps = {
  * It's particularly useful for creating scrollable containers for lists, items, and galleries that
  * need to adapt to both vertical and horizontal layouts.
  */
-const ListView: React.FC<ListViewProps> = ({
-  children,
-  style,
-  className,
-  scrollDirection = "vertical",
-  physics = "clamped",
-}) => {
-  const overflowStyle =
-    scrollDirection === "horizontal" ? "overflow-x" : "overflow-y";
-  const physicsStyle = physics === "never" ? "hidden" : "auto";
+const ListView = forwardRef<ScrollController, ListViewProps>(
+  (
+    {
+      children,
+      style,
+      className,
+      scrollDirection = "vertical",
+      physics = "clamped",
+      scrollControllerRef,
+    },
+    ref
+  ) => {
+    const listRef = useRef<HTMLDivElement>(null);
 
-  return (
-    <div
-      className={className}
-      style={{
-        ...style,
-        display: scrollDirection === "horizontal" ? "flex" : "block",
-        [overflowStyle]: physicsStyle,
-      }}
-    >
-      {children}
-    </div>
-  );
-};
+    // Adjust overflow behavior based on scrollDirection and physics
+    const overflowStyle =
+      scrollDirection === "horizontal" ? "overflowX" : "overflowY";
+    const physicsStyle = physics === "never" ? "hidden" : "auto";
+
+    // Expose the scroll controller methods using `useImperativeHandle`
+    useImperativeHandle(scrollControllerRef, () => ({
+      scrollToTop: () => {
+        if (listRef.current) listRef.current.scrollTop = 0;
+      },
+      scrollToBottom: () => {
+        if (listRef.current)
+          listRef.current.scrollTop = listRef.current.scrollHeight;
+      },
+      scrollBy: (x, y) => {
+        if (listRef.current) {
+          listRef.current.scrollBy({ left: x, top: y, behavior: "smooth" });
+        }
+      },
+      scrollTo: (x, y) => {
+        if (listRef.current) {
+          listRef.current.scrollTo({ left: x, top: y, behavior: "smooth" });
+        }
+      },
+      getCurrentScrollPosition: () => {
+        return {
+          top: listRef.current?.scrollTop || 0,
+          left: listRef.current?.scrollLeft || 0,
+        };
+      },
+      getMaxScrollExtent: () => {
+        return {
+          maxTop:
+            (listRef.current?.scrollHeight ?? 0) -
+            (listRef.current?.clientHeight ?? 0),
+          maxLeft:
+            (listRef.current?.scrollWidth ?? 0) -
+              (listRef.current?.clientWidth || 0) || 0,
+        };
+      },
+    }));
+
+    return (
+      <div
+        ref={listRef}
+        className={className}
+        style={{
+          ...style,
+          display: scrollDirection === "horizontal" ? "flex" : "block",
+          [overflowStyle]: physicsStyle,
+        }}
+      >
+        {children}
+      </div>
+    );
+  }
+);
 
 export default ListView;

@@ -1,4 +1,14 @@
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
+
+// Scroll Controller Interface
+interface ScrollController {
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
+  scrollBy: (x: number, y: number) => void;
+  scrollTo: (x: number, y: number) => void;
+  getCurrentScrollPosition: () => { top: number; left: number };
+  getMaxScrollExtent: () => { maxTop: number; maxLeft: number };
+}
 
 type ScrollDirection = "vertical" | "horizontal";
 type ScrollPhysics = "clamped" | "never" | "bouncy";
@@ -20,6 +30,8 @@ type GridViewProps = {
   mainAxisExtent?: number;
   /** Spacing between grid items */
   spacing?: number;
+  /** Scroll controller ref for programmatically controlling scroll */
+  scrollControllerRef?: React.Ref<ScrollController>;
 };
 
 /**
@@ -34,6 +46,7 @@ type GridViewProps = {
  *   crossAxisCount={3}
  *   mainAxisExtent={100}
  *   spacing={20}
+ *   scrollControllerRef={scrollControllerRef}
  * >
  *   <div style={{ backgroundColor: 'red', height: '100px' }} />
  *   <div style={{ backgroundColor: 'blue', height: '100px' }} />
@@ -47,6 +60,7 @@ type GridViewProps = {
  *   crossAxisCount={4}
  *   mainAxisExtent={200}
  *   spacing={10}
+ *   scrollControllerRef={scrollControllerRef}
  * >
  *   <div style={{ backgroundColor: 'yellow', height: '100px' }} />
  *   <div style={{ backgroundColor: 'purple', height: '100px' }} />
@@ -66,6 +80,7 @@ type GridViewProps = {
  * - `crossAxisCount`: The number of columns (or rows for vertical direction) in the grid.
  * - `mainAxisExtent`: The fixed height (for vertical scroll) or width (for horizontal scroll) of each grid item.
  * - `spacing`: The space (in pixels) between the grid items.
+ * - `scrollControllerRef`: A reference to control the grid's scroll programmatically. Allows scrolling to top, bottom, or other specific positions.
  */
 const GridView: React.FC<GridViewProps> = ({
   children,
@@ -76,6 +91,7 @@ const GridView: React.FC<GridViewProps> = ({
   crossAxisCount,
   mainAxisExtent,
   spacing = 0,
+  scrollControllerRef,
 }) => {
   const overflowStyle =
     scrollDirection === "horizontal" ? "overflow-x" : "overflow-y";
@@ -89,8 +105,75 @@ const GridView: React.FC<GridViewProps> = ({
     ...style,
   };
 
+  // Scroll container reference
+  const gridContainerRef = useRef<HTMLDivElement>(null);
+
+  // Methods for the ScrollController interface
+  const scrollToTop = () => {
+    gridContainerRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
+
+  const scrollToBottom = () => {
+    const maxScrollTop = gridContainerRef.current?.scrollHeight || 0;
+    gridContainerRef.current?.scrollTo({
+      top: maxScrollTop,
+      left: 0,
+      behavior: "smooth",
+    });
+  };
+
+  const scrollBy = (x: number, y: number) => {
+    gridContainerRef.current?.scrollBy({ left: x, top: y, behavior: "smooth" });
+  };
+
+  const scrollTo = (x: number, y: number) => {
+    gridContainerRef.current?.scrollTo({ left: x, top: y, behavior: "smooth" });
+  };
+
+  const getCurrentScrollPosition = () => {
+    if (gridContainerRef.current) {
+      return {
+        top: gridContainerRef.current.scrollTop,
+        left: gridContainerRef.current.scrollLeft,
+      };
+    }
+    return { top: 0, left: 0 };
+  };
+
+  const getMaxScrollExtent = () => {
+    if (gridContainerRef.current) {
+      return {
+        maxTop:
+          gridContainerRef.current.scrollHeight -
+          gridContainerRef.current.clientHeight,
+        maxLeft:
+          gridContainerRef.current.scrollWidth -
+          gridContainerRef.current.clientWidth,
+      };
+    }
+    return { maxTop: 0, maxLeft: 0 };
+  };
+
+  // Expose the scroll methods to the parent via the ref
+  useEffect(() => {
+    if (
+      scrollControllerRef &&
+      "current" in scrollControllerRef &&
+      gridContainerRef.current
+    ) {
+      scrollControllerRef.current = {
+        scrollToTop,
+        scrollToBottom,
+        scrollBy,
+        scrollTo,
+        getCurrentScrollPosition,
+        getMaxScrollExtent,
+      };
+    }
+  }, [scrollControllerRef]);
+
   return (
-    <div className={className} style={gridStyle}>
+    <div className={className} style={gridStyle} ref={gridContainerRef}>
       {React.Children.map(children, (child) => (
         <div style={{ height: mainAxisExtent }}>{child}</div> // Enforce mainAxisExtent here
       ))}

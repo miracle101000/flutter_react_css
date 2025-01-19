@@ -38,4 +38,11 @@ export { default as ClipRRect } from "./components/ClipRRect";
 export { default as Center } from "./components/Center";
 export { default as Align } from "./components/Align";
 export { default as CircularProgressIndicator} from "./components/CircularProgressIndicator";
+export { default as CircleAvatar} from "./components/CircleAvatar";
+export { default as Reoderable} from "./components/Reoderable";
+export { default as RichText} from "./components/RichText";
+export { default as OutlinedButton} from "./components/OutlinedButton";
+export { default as ElevatedButton} from "./components/ElevatedButton";
+export { default as CupertinoButton} from "./components/CupertinoButton";
+export { default as AppBar} from "./components/AppBar";
 

@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useRef, useEffect } from "react";
 
 type ScrollDirection = "vertical" | "horizontal";
 type ScrollPhysics = "clamped" | "never" | "bouncy";
+
+interface ScrollController {
+  scrollToTop: () => void;
+  scrollToBottom: () => void;
+  scrollBy: (x: number, y: number) => void;
+  scrollTo: (x: number, y: number) => void;
+  getCurrentScrollPosition: () => { top: number; left: number };
+  getMaxScrollExtent: () => { maxTop: number; maxLeft: number };
+}
 
 type ListViewSeparatedProps = {
   /** The number of items in the list */
@@ -18,6 +27,8 @@ type ListViewSeparatedProps = {
   scrollDirection?: ScrollDirection;
   /** Scroll physics of the list */
   physics?: ScrollPhysics;
+  /** A ref to control the scroll position programmatically */
+  scrollControllerRef?: React.Ref<ScrollController>;
 };
 
 /**
@@ -36,6 +47,7 @@ type ListViewSeparatedProps = {
  *   physics="auto"
  *   style={{ padding: "10px" }}
  *   className="my-separator-list"
+ *   scrollControllerRef={scrollControllerRef}
  * />
  * ```
  *
@@ -53,6 +65,7 @@ type ListViewSeparatedProps = {
  *   - `"clamped"`: Applies a clamped overflow behavior, typically for vertical scrolling.
  * - `style`: Additional inline styles to apply to the `ListViewSeparated`. These styles will override the default ones if provided.
  * - `className`: An optional CSS class to apply custom styles to the component.
+ * - `scrollControllerRef`: A ref that allows you to control the scroll position programmatically.
  *
  * This component is ideal for rendering lists where each item needs to be visually separated by a divider,
  * such as in a navigation menu or a list of notifications. The `separatorBuilder` function allows you
@@ -66,13 +79,48 @@ const ListViewSeparated: React.FC<ListViewSeparatedProps> = ({
   className,
   scrollDirection = "vertical",
   physics = "clamped",
+  scrollControllerRef,
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
   const overflowStyle =
     scrollDirection === "horizontal" ? "overflow-x" : "overflow-y";
   const physicsStyle = physics === "never" ? "hidden" : "auto";
 
+  // Scroll controller implementation
+  useEffect(() => {
+    if (scrollControllerRef && containerRef.current) {
+      const container = containerRef.current;
+      const scrollController: ScrollController = {
+        scrollToTop: () => container.scrollTo(0, 0),
+        scrollToBottom: () => {
+          container.scrollTo(0, container.scrollHeight);
+        },
+        scrollBy: (x, y) => {
+          container.scrollBy(x, y);
+        },
+        scrollTo: (x, y) => {
+          container.scrollTo(x, y);
+        },
+        getCurrentScrollPosition: () => ({
+          top: container.scrollTop,
+          left: container.scrollLeft,
+        }),
+        getMaxScrollExtent: () => ({
+          maxTop: container.scrollHeight - container.clientHeight,
+          maxLeft: container.scrollWidth - container.clientWidth,
+        }),
+      };
+
+      // Assign the scrollController to the provided ref
+      (scrollControllerRef as React.RefObject<ScrollController>).current =
+        scrollController;
+    }
+  }, [scrollControllerRef]);
+
   return (
     <div
+      ref={containerRef}
       className={className}
       style={{
         ...style,

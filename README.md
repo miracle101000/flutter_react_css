@@ -1,4 +1,4 @@
-Here's a detailed README template for your npm package:
+You can update the README to reflect the newly added components with the appropriate examples. Here's an enhanced version of your README, including the new components:
 
 ---
 
@@ -273,9 +273,9 @@ These components provide animation capabilities for rotating, fading, and contai
 
 ```tsx
 import {
-  AnimatedRotation,
-  AnimatedOpacity,
   AnimatedContainer,
+  AnimatedOpacity,
+  AnimatedRotation,
 } from "flutter-react-css";
 
 const MyComponent = () => (
@@ -285,22 +285,134 @@ const MyComponent = () => (
 );
 ```
 
-## Contributing
+### 17. `FittedBox`
 
-We welcome contributions to improve **Flutter React CSS**! To contribute, please fork the repository, create a feature branch, and submit a pull request.
+A box that scales its child to fit within the available space.
 
-### Steps to Contribute:
+```tsx
+import { FittedBox } from "flutter-react-css";
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-branch`).
-3. Make changes and commit them (`git commit -am 'Add new feature'`).
-4. Push to the branch (`git push origin feature-branch`).
-5. Create a new pull request.
+const MyComponent = () => (
+  <FittedBox>
+    <div>Fitted content</div>
+  </FittedBox>
+);
+```
 
-## License
+### 18. `Transform`
 
-This package is open-source and available under the MIT License.
+A container for transforming its children (rotate, scale, etc.).
+
+```tsx
+import { Transform } from "flutter-react-css";
+
+const MyComponent = () => (
+  <Transform rotate={45} scale={1.5}>
+    <div>Transformed content</div>
+  </Transform>
+);
+```
+
+### 19. `AspectRatio`
+
+A component that maintains a specific aspect ratio for its children.
+
+```tsx
+import { AspectRatio } from "flutter-react-css";
+
+const MyComponent = () => (
+  <AspectRatio ratio={16 / 9}>
+    <div>Content with aspect ratio</div>
+  </AspectRatio>
+);
+```
+
+### 20. `FractionallySizedBox`
+
+A component that sizes its child based on a fraction of the parent's size.
+
+```tsx
+import { FractionallySizedBox } from "flutter-react-css";
+
+const MyComponent = () => (
+  <FractionallySizedBox widthFactor={0.5} heightFactor={0.5}>
+    <div>Fractional sized content</div>
+  </FractionallySizedBox>
+);
+```
+
+### 21. `TabBar`
+
+A tab bar component for navigation.
+
+```tsx
+import { TabBar } from "flutter-react-css";
+
+const MyComponent = () => <TabBar tabs={["Tab 1", "Tab 2", "Tab 3"]} />;
+```
+
+### 22. `Switch`
+
+A toggle switch component.
+
+```tsx
+import { Switch } from "flutter-react-css";
+
+const MyComponent = () => (
+  <Switch checked={true} onChange={(e) => console.log(e.target.checked)} />
+);
+```
+
+### 23. `Divider`
+
+A divider to separate content.
+
+```tsx
+import { Divider } from "flutter-react-css";
+
+const MyComponent = () => (
+  <div>
+    <div>Item 1</div>
+    <Divider />
+    <div>Item 2</div>
+  </div>
+);
+```
+
+### 24. `ClipRRect`
+
+A component that rounds the corners of its child.
+
+```tsx
+import { ClipRRect } from "flutter-react-css";
+
+const MyComponent = () => (
+  <ClipRRect radius={10}>
+    <div>Content with rounded corners</div>
+  </ClipRRect>
+);
+```
+
+### 25. `CircularProgressIndicator`
+
+A loading indicator.
+
+```tsx
+import { CircularProgressIndicator } from "flutter-react-css";
+
+const MyComponent = () => <CircularProgressIndicator />;
+```
 
 ---
 
-By following this structure, users can understand how to use each component effectively and can find examples for each one.
+## Contributing
+
+We welcome contributions! If you'd like to contribute, please fork the repository, create a new branch, and submit a pull request.
+
+## License
+
+This library is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+This update should make the README comprehensive and user-friendly, providing examples and details on the new components.

@@ -54,6 +54,8 @@ type ContainerProps = {
   style?: React.CSSProperties;
   /** HTML element type (e.g., div, section, article) */
   as?: keyof JSX.IntrinsicElements;
+  /** Transform CSS property */
+  transform?: string; // New transform prop
 };
 
 /**
@@ -91,6 +93,19 @@ type ContainerProps = {
  *   height="300px"
  * >
  *   <p>This is a container with a custom box-shadow.</p>
+ * </Container>
+ *
+ * // With a transform property applied (scaling and rotation)
+ * <Container
+ *   padding={20}
+ *   margin={10}
+ *   backgroundColor="lightgreen"
+ *   borderRadius={10}
+ *   transform="scale(1.1) rotate(10deg)" // Adding transform
+ *   width="300px"
+ *   height="200px"
+ * >
+ *   <h1 style={{ textAlign: 'center' }}>Transformed Container</h1>
  * </Container>
  * ```
  */
@@ -130,6 +145,7 @@ const Container: React.FC<ContainerProps> = ({
   height,
   style,
   as = "div",
+  transform, // Accept transform prop
   ...props
 }) => {
   const theme = useTheme();
@@ -203,6 +219,7 @@ const Container: React.FC<ContainerProps> = ({
         : undefined),
     width: width || "auto", // Default to auto width
     height: height || "auto", // Default to auto height
+    transform, // Apply the transform property (if provided)
     ...style,
   };
 

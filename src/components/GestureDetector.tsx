@@ -18,6 +18,34 @@ type GestureDetectorProps = {
   longPressDelay?: number;
 };
 
+/**
+ * A component that detects various user gestures such as taps, double taps, long presses, and drags (both vertical and horizontal).
+ * This component allows you to handle different user interactions on its children elements, providing a flexible way to respond to touch and mouse gestures.
+ * The component supports customizable delay for long press gestures and detects drag updates for more interactive content.
+ *
+ * Example usage:
+ * ```tsx
+ * <GestureDetector
+ *   onTap={() => console.log('Tapped!')}
+ *   onDoubleTap={() => console.log('Double Tapped!')}
+ *   onLongPress={() => console.log('Long Pressed!')}
+ *   onPanUpdate={(position) => console.log('Dragging:', position)}
+ *   longPressDelay={700}
+ * >
+ *   <div style={{ width: '100px', height: '100px', backgroundColor: 'red' }} />
+ * </GestureDetector>
+ * ```
+ *
+ * Properties:
+ * - `onTap`: A callback function that is called when a tap gesture is detected. This is triggered when the user taps once on the component.
+ * - `onDoubleTap`: A callback function that is called when a double tap gesture is detected. This is triggered when the user taps twice within a short duration.
+ * - `onLongPress`: A callback function that is called when a long press gesture is detected. This is triggered when the user holds down their touch or mouse click for a specified duration (`longPressDelay`).
+ * - `onPanUpdate`: A callback function that is called with the position (x, y coordinates) during a drag (pan) update. This is useful for tracking dragging movements.
+ * - `onVerticalDragUpdate`: A callback function that is called with the position (x, y coordinates) during vertical drag updates. This is useful for tracking vertical movement.
+ * - `onHorizontalDragUpdate`: A callback function that is called with the position (x, y coordinates) during horizontal drag updates. This is useful for tracking horizontal movement.
+ * - `longPressDelay`: The duration (in milliseconds) to wait before triggering the long press callback. Defaults to 500ms if not provided.
+ * - `children`: The content to be rendered and interacted with. The gesture detection is applied to this content.
+ */
 const GestureDetector: React.FC<GestureDetectorProps> = ({
   children,
   onTap,

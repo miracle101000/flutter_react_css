@@ -69,6 +69,26 @@ type TextFieldProps = {
   underlined?: boolean;
 };
 
+/**
+ * A generic text field component that provides common features like input validation, error handling, and custom styles.
+ *
+ * Example usage:
+ * ```tsx
+ * <TextField
+ *   value="Hello"
+ *   onChange={(newValue) => console.log(newValue)}
+ *   label="Your Name"
+ *   required
+ *   error="This field is required"
+ *   maxLength={20}
+ *   placeholder="Enter your name"
+ *   prefixIcon={<i className="fa fa-user" />}
+ *   suffixIcon={<i className="fa fa-check" />}
+ *   style={{ margin: "10px 0" }}
+ * />
+ * ```
+ */
+
 const TextField: React.FC<TextFieldProps> = ({
   value,
   onChange,

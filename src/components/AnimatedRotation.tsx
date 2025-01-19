@@ -6,6 +6,23 @@ interface AnimatedRotationProps {
   children: React.ReactNode;
 }
 
+/**
+ * A component that animates the rotation of its children based on the `turns` prop over a specified duration.
+ * This component applies a smooth rotating effect, where the content rotates a certain number of turns (360 degrees per turn).
+ * When the `turns` prop changes, the child elements smoothly rotate to the new angle.
+ *
+ * Example usage:
+ * ```tsx
+ * <AnimatedRotation turns={2} duration={1000}>
+ *   <div style={{ width: '100px', height: '100px', backgroundColor: 'red' }} />
+ * </AnimatedRotation>
+ * ```
+ *
+ * Properties:
+ * - `turns`: The number of turns (full 360-degree rotations) that the content should make. For example, `1` means one full rotation, `2` means two full rotations, etc.
+ * - `duration`: The time (in milliseconds) it takes for the rotation to complete.
+ * - `children`: The content to be rendered and animated with the rotation effect.
+ */
 const AnimatedRotation: React.FC<AnimatedRotationProps> = ({
   turns,
   duration,

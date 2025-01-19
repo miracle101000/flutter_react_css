@@ -1,24 +1,74 @@
 import React, { useState, useEffect, useRef } from "react";
 
+// Define the types for the Carousel props
 interface CarouselProps {
-  children: React.ReactNode[];
-  height: string;
-  aspectRatio: number;
-  initialPage: number;
-  enableInfiniteScroll: boolean;
-  reverse: boolean;
-  autoPlay: boolean;
-  autoPlayInterval: number;
-  autoPlayAnimationDuration: number;
-  autoPlayCurve: string;
-  enlargeCenterPage: boolean;
-  enlargeFactor: number;
-  onPageChanged: (index: number) => void;
-  scrollDirection: "horizontal" | "vertical";
-  viewportFraction: number;
-  builder?: (index: number) => React.ReactNode;
+  children: React.ReactNode[]; // The items (slides) to be displayed in the carousel
+  height: string; // Height of the carousel
+  aspectRatio: number; // Aspect ratio for the carousel's height
+  initialPage: number; // Index of the first slide to be displayed
+  enableInfiniteScroll: boolean; // Whether to allow infinite scroll (looping through slides)
+  reverse: boolean; // Whether to reverse the direction of scrolling
+  autoPlay: boolean; // Whether the carousel should automatically play
+  autoPlayInterval: number; // The interval (in milliseconds) for autoplay
+  autoPlayAnimationDuration: number; // Duration of the slide transition animation
+  autoPlayCurve: string; // The CSS easing function for animation transitions
+  enlargeCenterPage: boolean; // Whether to enlarge the center slide
+  enlargeFactor: number; // The factor by which the center slide will be enlarged
+  onPageChanged: (index: number) => void; // Callback when the page changes
+  scrollDirection: "horizontal" | "vertical"; // Direction of scroll (horizontal or vertical)
+  viewportFraction: number; // Fraction of the viewport that each slide occupies
+  builder?: (index: number) => React.ReactNode; // Optional builder function to customize slide content
 }
 
+/**
+ * Carousel Component
+ * A flexible and customizable React component for displaying a collection of slides in a carousel-style layout.
+ * Supports features like autoplay, infinite scroll, and custom slide content.
+ *
+ * Props:
+ * - children: The slides to be displayed in the carousel. Each child can be any React node (e.g., images, text, etc.).
+ * - height: The height of the carousel. Can be defined as a string (e.g., '300px').
+ * - aspectRatio: Defines the aspect ratio of the carousel relative to its height (e.g., 1.5 means 1.5 times the height).
+ * - initialPage: The index of the slide to show initially. Default is 0.
+ * - enableInfiniteScroll: Whether the carousel should loop infinitely when navigating between slides. Default is false.
+ * - reverse: Whether the scroll direction should be reversed. Default is false.
+ * - autoPlay: Whether the carousel should automatically transition through slides. Default is false.
+ * - autoPlayInterval: The interval (in milliseconds) for automatic slide transitions. Default is 3000ms.
+ * - autoPlayAnimationDuration: The duration (in milliseconds) of the slide transition animation. Default is 500ms.
+ * - autoPlayCurve: The CSS easing function to apply to the transition animation. Default is 'ease'.
+ * - enlargeCenterPage: Whether the center slide should be enlarged for emphasis. Default is false.
+ * - enlargeFactor: The scale factor for enlarging the center slide. Default is 1.2.
+ * - onPageChanged: A callback function that is called when the active page index changes. It receives the new index as an argument.
+ * - scrollDirection: The direction of scrolling, either 'horizontal' or 'vertical'. Default is 'horizontal'.
+ * - viewportFraction: A value between 0 and 1 that determines how much of the viewport each slide occupies. Default is 1.
+ * - builder: An optional custom builder function that can be used to render slides in a custom way based on the index.
+ *
+ * Example Usage:
+ * ```tsx
+ * import Carousel from './path-to-carousel';
+ *
+ * function App() {
+ *   return (
+ *     <div style={{ width: '100%', height: '500px' }}>
+ *       <Carousel
+ *         height="400px"
+ *         aspectRatio={1.5}
+ *         initialPage={0}
+ *         autoPlay={true}
+ *         autoPlayInterval={3000}
+ *         onPageChanged={(index) => console.log('Page changed to:', index)}
+ *       >
+ *         <img src="slide1.jpg" alt="Slide 1" />
+ *         <img src="slide2.jpg" alt="Slide 2" />
+ *         <img src="slide3.jpg" alt="Slide 3" />
+ *       </Carousel>
+ *     </div>
+ *   );
+ * }
+ *
+ * export default App;
+ * ```
+ */
 const Carousel: React.FC<CarouselProps> = ({
   children,
   height,
@@ -30,8 +80,8 @@ const Carousel: React.FC<CarouselProps> = ({
   autoPlayInterval,
   autoPlayAnimationDuration,
   autoPlayCurve,
-  enlargeCenterPage,
-  enlargeFactor,
+  enlargeCenterPage, // Prop to enlarge the center page
+  enlargeFactor, // Prop to define how much the center page should be enlarged
   onPageChanged,
   scrollDirection,
   viewportFraction,
@@ -136,18 +186,26 @@ const Carousel: React.FC<CarouselProps> = ({
           transition: `transform ${autoPlayAnimationDuration}ms ${autoPlayCurve}`,
         }}
       >
-        {React.Children.map(children, (_, index) => (
-          <div
-            key={index}
-            style={{
-              flex: `${viewportFraction}`,
-              width: `${100 / viewportFraction}%`,
-              height: "100%",
-            }}
-          >
-            {renderItem(index)}
-          </div>
-        ))}
+        {React.Children.map(children, (_, index) => {
+          const isCenterPage = index === currentIndex; // Determine if this item is the center page
+          return (
+            <div
+              key={index}
+              style={{
+                flex: `${viewportFraction}`,
+                width: `${100 / viewportFraction}%`,
+                height: "100%",
+                transform:
+                  enlargeCenterPage && isCenterPage
+                    ? `scale(${enlargeFactor})`
+                    : "none", // Apply scaling to center page
+                transition: "transform 0.3s ease",
+              }}
+            >
+              {renderItem(index)}
+            </div>
+          );
+        })}
       </div>
 
       {enableInfiniteScroll && (

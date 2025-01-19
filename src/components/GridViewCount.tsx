@@ -25,7 +25,47 @@ type GridViewCountProps = {
 };
 
 /**
- * A GridView.Count component that renders a grid of items based on an item count.
+ * A customizable grid layout component that dynamically generates grid items based on a provided `itemBuilder` function and the total number of items (`itemCount`).
+ * Additionally, this component displays the total count of items within the grid.
+ *
+ * Example usage:
+ * ```tsx
+ * <GridViewCount
+ *   itemCount={10}
+ *   itemBuilder={(index) => (
+ *     <div style={{ backgroundColor: 'red', height: '100px' }}>
+ *       Item {index + 1}
+ *     </div>
+ *   )}
+ *   crossAxisCount={3}
+ *   mainAxisExtent={100}
+ *   spacing={10}
+ * />
+ * ```
+ *
+ * Properties:
+ * - `itemCount`: The total number of items to render in the grid.
+ * - `itemBuilder`: A function that returns a grid item (element) based on its index in the grid.
+ * - `style`: Optional inline styles to be applied to the grid container.
+ * - `className`: Custom CSS class to be applied to the grid container.
+ * - `crossAxisCount`: The number of columns (or rows for vertical direction) in the grid.
+ * - `mainAxisExtent`: The fixed height (for vertical scroll) or width (for horizontal scroll) of each grid item.
+ * - `spacing`: The space (in pixels) between grid items.
+ *
+ * @example
+ * ```tsx
+ * <GridViewCount
+ *   itemCount={10}
+ *   itemBuilder={(index) => (
+ *     <div style={{ backgroundColor: 'red', height: '100px' }}>
+ *       Item {index + 1}
+ *     </div>
+ *   )}
+ *   crossAxisCount={3}
+ *   mainAxisExtent={100}
+ *   spacing={10}
+ * />
+ * ```
  */
 const GridViewCount: React.FC<GridViewCountProps> = ({
   itemCount,

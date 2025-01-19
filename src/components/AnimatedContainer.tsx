@@ -42,8 +42,74 @@ type AnimatedContainerProps = {
   style?: React.CSSProperties;
   as?: keyof JSX.IntrinsicElements;
   animationDuration?: number; // Added to control the duration of the animation
+  transform?: string; // Added for transform animations
 };
 
+/**
+ * A flexible container component for layout and styling with support for gradients, shadows, and animations.
+ *
+ * Example usage:
+ * ```tsx
+ * // Basic container with padding, margin, background color, and shadow
+ * <AnimatedContainer
+ *   padding={20}
+ *   margin={10}
+ *   backgroundColor="lightblue"
+ *   borderRadius={10}
+ *   shadow="md"
+ *   width="300px"
+ *   height="200px"
+ * >
+ *   <h1 style={{ textAlign: 'center' }}>Hello World</h1>
+ * </AnimatedContainer>
+ *
+ * // With a linear gradient background
+ * <AnimatedContainer
+ *   padding={20}
+ *   linearGradient="to right, #ff7e5f, #feb47b"
+ *   width="100%"
+ *   height="100vh"
+ * >
+ *   <h2 style={{ textAlign: 'center' }}>Welcome to React!</h2>
+ * </AnimatedContainer>
+ *
+ * // With a custom box shadow and padding
+ * <AnimatedContainer
+ *   boxShadow="0 4px 8px rgba(0, 0, 0, 0.2)"
+ *   padding="30px"
+ *   width="400px"
+ *   height="300px"
+ * >
+ *   <p>This is a container with a custom box-shadow.</p>
+ * </AnimatedContainer>
+ *
+ * // With transform property applied (scaling and rotation)
+ * <AnimatedContainer
+ *   padding={20}
+ *   margin={10}
+ *   backgroundColor="lightgreen"
+ *   borderRadius={10}
+ *   transform="scale(1.1) rotate(10deg)" // Adding transform
+ *   width="300px"
+ *   height="200px"
+ * >
+ *   <h1 style={{ textAlign: 'center' }}>Transformed Container</h1>
+ * </AnimatedContainer>
+ *
+ * // With animation duration control
+ * <AnimatedContainer
+ *   padding={20}
+ *   margin={10}
+ *   backgroundColor="lightpink"
+ *   borderRadius={15}
+ *   animationDuration={700} // Adjust animation duration
+ *   width="250px"
+ *   height="150px"
+ * >
+ *   <h3 style={{ textAlign: 'center' }}>Animated Container</h3>
+ * </AnimatedContainer>
+ * ```
+ */
 const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   children,
   padding,
@@ -81,6 +147,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   style,
   as = "div",
   animationDuration = 500, // Default to 500ms
+  transform, // Added transform prop
   ...props
 }) => {
   const theme = useTheme();
@@ -181,6 +248,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
       boxShadow: computedStyles.boxShadow,
       width: computedStyles.width,
       height: computedStyles.height,
+      transform: transform || "scale(1)", // Apply transform if provided, default to no transform
     },
     from: {
       opacity: 0, // Initial opacity set to 0 (fade-in effect)

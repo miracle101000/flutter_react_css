@@ -22,3 +22,18 @@ export { default as Rotation } from "./components/Rotation";
 export { default as AnimatedOpacity } from "./components/AnimatedOpacity";
 export { default as AnimatedContainer } from "./components/AnimatedContainer";
 export { default as AnimatedRotation } from "./components/AnimatedRotation";
+export { default as AnimatedScale } from "./components/AnimatedScale";
+export { default as AnimatedSlide } from "./components/AnimatedSlide";
+export { default as FittedBox } from "./components/FittedBox";
+export { default as Transform } from "./components/Transform";
+export { default as TransformRotate } from "./components/TransformRotate";
+export { default as TransformScale } from "./components/TransformScale";
+export { default as TransformTranslate } from "./components/TransformTranslate";
+export { default as AspectRatio } from "./components/AspectRatio";
+export { default as FractionallySizedBox } from "./components/FractionallySizedBox";
+export { default as TabBar } from "./components/TabBar";
+export { default as Switch } from "./components/Switch";
+export { default as Divider } from "./components/Divider";
+export { default as ClipRRect } from "./components/ClipRRect";
+export { default as CircularProgressIndicator} from "./components/CircularProgressIndicator";
+

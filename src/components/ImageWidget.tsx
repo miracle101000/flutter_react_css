@@ -19,6 +19,38 @@ interface ImageWidgetProps {
   onError?: () => void; // Callback when the image fails to load
 }
 
+/**
+ * A component that displays an image with support for multiple image sources, including URLs, File objects, and Uint8Array.
+ * This component handles loading states, errors, and provides customizable placeholders while the image is being loaded or if it fails to load.
+ * It also supports applying custom border radius and responsive dimensions for the image container.
+ *
+ * Example usage:
+ * ```tsx
+ * <ImageWidget
+ *   src="https://example.com/image.jpg"
+ *   alt="Example Image"
+ *   borderRadius={{ topLeft: "12px", topRight: "12px" }}
+ *   width="300px"
+ *   height="200px"
+ *   loadingPlaceholder={<div>Loading...</div>}
+ *   errorPlaceholder={<div>Failed to load image</div>}
+ * />
+ * ```
+ *
+ * Properties:
+ * - `src`: The source of the image. This can be a URL string, a File object, or a Uint8Array (binary image data).
+ * - `alt`: Alt text to provide for the image, primarily used for accessibility.
+ * - `borderRadius`: Custom border radius for the image container, allowing control over rounded corners. You can provide specific values for each corner (e.g., `topLeft`, `topRight`, `bottomLeft`, `bottomRight`) or a single value for all corners (e.g., `{ all: "8px" }`).
+ * - `loadingPlaceholder`: A JSX element to display while the image is loading. The default is a simple "Loading..." message.
+ * - `errorPlaceholder`: A JSX element to display if the image fails to load. The default is a simple "Failed to load image" message.
+ * - `width`: The width of the image container. It can be a string (e.g., `"100%"`) or a number (e.g., `300`).
+ * - `height`: The height of the image container. It can be a string (e.g., `"auto"`) or a number (e.g., `200`).
+ * - `style`: Additional inline styles for customizing the image container.
+ * - `onLoad`: A callback function that is called when the image successfully loads.
+ * - `onError`: A callback function that is called if the image fails to load.
+ *
+ * This component is designed to be flexible and handle various image types and sources while ensuring a smooth user experience during loading and error states.
+ */
 const ImageWidget: React.FC<ImageWidgetProps> = ({
   src,
   alt,

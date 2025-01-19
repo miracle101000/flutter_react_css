@@ -45,4 +45,6 @@ export { default as OutlinedButton} from "./components/OutlinedButton";
 export { default as ElevatedButton} from "./components/ElevatedButton";
 export { default as CupertinoButton} from "./components/CupertinoButton";
 export { default as AppBar} from "./components/AppBar";
+export { default as Spacer} from "./components/Spacer";
+export { default as Expanded} from "./components/Expanded";
 

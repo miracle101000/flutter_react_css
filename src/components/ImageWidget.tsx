@@ -17,6 +17,7 @@ interface ImageWidgetProps {
   style?: React.CSSProperties; // Custom styles
   onLoad?: () => void; // Callback when the image is loaded
   onError?: () => void; // Callback when the image fails to load
+  boxFit?: "cover" | "contain" | "fill"; // Controls how the image scales to fit
 }
 
 /**
@@ -34,6 +35,7 @@ interface ImageWidgetProps {
  *   height="200px"
  *   loadingPlaceholder={<div>Loading...</div>}
  *   errorPlaceholder={<div>Failed to load image</div>}
+ *   boxFit="cover"
  * />
  * ```
  *
@@ -48,6 +50,7 @@ interface ImageWidgetProps {
  * - `style`: Additional inline styles for customizing the image container.
  * - `onLoad`: A callback function that is called when the image successfully loads.
  * - `onError`: A callback function that is called if the image fails to load.
+ * - `boxFit`: Controls how the image scales to fit the container. Options: `"cover"`, `"contain"`, `"fill"`, `"fitWidth"`.
  *
  * This component is designed to be flexible and handle various image types and sources while ensuring a smooth user experience during loading and error states.
  */
@@ -62,6 +65,7 @@ const ImageWidget: React.FC<ImageWidgetProps> = ({
   style,
   onLoad,
   onError,
+  boxFit = "cover",
 }) => {
   const [imageSrc, setImageSrc] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -112,6 +116,11 @@ const ImageWidget: React.FC<ImageWidgetProps> = ({
     borderBottomRightRadius: borderRadius.bottomRight || borderRadius.all,
   };
 
+  // Determine object-fit style based on the boxFit prop
+  const objectFitStyle = {
+    objectFit: boxFit,
+  };
+
   return (
     <div
       style={{
@@ -141,7 +150,7 @@ const ImageWidget: React.FC<ImageWidgetProps> = ({
           style={{
             width: "100%",
             height: "100%",
-            objectFit: "cover",
+            ...objectFitStyle, // Apply the objectFit style based on the boxFit prop
             ...borderRadiusStyle, // Apply the calculated border radius
           }}
         />

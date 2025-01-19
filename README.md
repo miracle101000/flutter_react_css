@@ -1,6 +1,6 @@
 ## Components
 
-This library provides a wide range of UI components that you can import and use in your React projects.
+This library provides a wide range of UI components that you can import and use in your React projects. These components are designed to be flexible and modular, making it easy to build responsive and dynamic user interfaces.
 
 ### Layout Components
 
@@ -9,101 +9,90 @@ This library provides a wide range of UI components that you can import and use 
 - **Row**: A flex container for horizontal layout.
 - **Column**: A flex container for vertical layout.
 - **SizedBox**: A simple box to add fixed spacing.
-- **SizedBox**: A simple box to add fixed spacing.
-- **SizedBox**: A simple box to add fixed spacing.
 - **Padding**: A component to add padding around its children.
 - **Opacity**: A component to control the opacity of its children.
 - **GestureDetector**: A component that listens for touch events.
-- **Positioned**: A component for positioning an element within a parent.
-- **PositionedFill**: A component that fills the entire space of its parent.
-
-### Scroll Components
-
-- **SingleChildScrollView**: A component to wrap a single child in a scrollable container.
-- **ListView**: A basic scrollable list component.
-- **ListViewBuilder**: A ListView with dynamic content rendered lazily.
-- **ListViewSeperated**: A ListView with separators between items.
-- **GridView**: A grid layout component.
-- **GridViewBuilder**: A grid layout component with dynamic content.
-- **GridViewCount**: A grid layout component with fixed number of columns.
+- **Positioned**: A component for positioning an element within a parent container.
+- **PositionedFill**: A component that positions an element to fill its parent container.
+- **SingleChildScrollView**: A scrollable view for a single child.
+- **ListView**: A scrolling container for a list of items.
+- **ListViewBuilder**: A list that dynamically builds its items as needed.
+- **ListViewSeperated**: A list with separated items.
+- **GridView**: A grid-based layout for displaying items.
+- **GridViewBuilder**: A grid layout that builds its items dynamically.
+- **GridViewCount**: A grid layout with a fixed number of items per row.
 
 ### Form Components
 
-- **TextField**: A text input field.
-- **Switch**: A switch toggle for binary values.
-- **TabBar**: A tab bar for navigation.
-- **Divider**: A horizontal line separator.
-- **OutlinedButton**: A button with an outlined style.
-- **ElevatedButton**: A button with an elevated style.
-- **CupertinoButton**: A button styled like iOS Cupertino buttons.
+- **TextField**: A text input field for user input.
+- **Switch**: A switch that toggles between two states.
+- **TabBar**: A component to display tabs for navigating between views.
+- **OutlinedButton**: A button with an outlined border.
+- **ElevatedButton**: A button with an elevated shadow.
+- **CupertinoButton**: A button styled to follow Apple's design system.
 
-### Animation Components
+### Visual Components
 
-- **Carousel**: A carousel component to display items in a sliding view.
-- **RotatedBox**: A component to rotate its child by a certain angle.
-- **Rotation**: A wrapper to animate rotation.
-- **AnimatedOpacity**: A component that animates opacity changes.
-- **AnimatedContainer**: A container component that animates size and other properties.
-- **AnimatedRotation**: A component that animates the rotation of its child.
-- **AnimatedScale**: A component that animates scaling of its child.
-- **AnimatedSlide**: A component that animates sliding of its child.
-- **Transform**: A wrapper to apply 2D and 3D transformations.
-- **TransformRotate**: A component that rotates its child.
-- **TransformScale**: A component that scales its child.
-- **TransformTranslate**: A component that translates (moves) its child.
-- **AspectRatio**: A component that adjusts its size to a specific aspect ratio.
-- **FractionallySizedBox**: A box that sizes itself fractionally in its parent.
+- **Carousel**: A carousel component to display a collection of items.
+- **RotatedBox**: A component that rotates its child.
+- **Rotation**: A component to apply a rotation transformation to its child.
+- **AnimatedOpacity**: An animated component for opacity transitions.
+- **AnimatedContainer**: A container component with animated size, color, and other properties.
+- **AnimatedRotation**: A component that applies an animated rotation.
+- **AnimatedScale**: A component that applies an animated scaling effect.
+- **AnimatedSlide**: A component that animates the sliding of an element.
+- **FittedBox**: A component that scales and positions its child according to the container.
+- **Transform**: A component that applies transformations like rotate, scale, and translate.
+- **TransformRotate**: A component that applies a rotation transformation.
+- **TransformScale**: A component that applies a scaling transformation.
+- **TransformTranslate**: A component that applies a translation transformation.
+- **AspectRatio**: A component to enforce a specific aspect ratio for its child.
+- **FractionallySizedBox**: A component that sizes its child based on a fraction of the parent container.
 
-### Common UI Components
+### Utility Components
 
-- **ClipRRect**: A component that clips its child with rounded corners.
-- **Center**: A component that centers its child within the parent.
-- **Align**: A component that aligns its child according to a specific alignment.
-- **CircularProgressIndicator**: A circular loading spinner.
-- **CircleAvatar**: A circular avatar component, typically used for profile pictures.
-- **Reorderable**: A component that enables drag-and-drop reordering of items.
-- **RichText**: A component for rendering styled text with mixed styles.
-- **AppBar**: A standard app bar used in mobile applications.
+- **Divider**: A horizontal line used to separate content.
+- **ClipRRect**: A component to clip its child with rounded corners.
+- **Center**: A component that centers its child both vertically and horizontally.
+- **Align**: A component that aligns its child within a container.
+- **CircularProgressIndicator**: A spinner indicating loading or processing.
+- **CircleAvatar**: A circular avatar image component.
+- **Reoderable**: A component for reordering its children.
+- **RichText**: A component to display styled text.
+- **Spacer**: A flexible spacer component that creates space between components.
+- **Expanded**: A component that expands to fill available space.
 
-## Usage
+### App Components
 
-You can import and use these components in your React project as follows:
+- **AppBar**: A top app bar typically used for navigation and actions.
+
+---
+
+### Example Usage:
 
 ```tsx
-import { TextField, Container, Row, Button } from "flutter_react_css";
+import {
+  Container,
+  Row,
+  Column,
+  TextField,
+  ElevatedButton,
+} from "your-component-library";
 
-const MyComponent = () => {
+const MyApp = () => {
   return (
-    <Container>
-      <Row>
-        <TextField placeholder="Enter text" />
-        <Button>Submit</Button>
-      </Row>
-    </Container>
+    <Scaffold>
+      <Container>
+        <Row>
+          <Column>
+            <TextField label="Enter your name" />
+            <ElevatedButton onClick={() => alert("Button clicked!")}>
+              Submit
+            </ElevatedButton>
+          </Column>
+        </Row>
+      </Container>
+    </Scaffold>
   );
 };
 ```
-
-## Example: Animated Components
-
-Here's an example of how to use the `AnimatedOpacity` component:
-
-```tsx
-import { AnimatedOpacity } from "flutter_react_css";
-
-const FadeInComponent = () => {
-  return (
-    <AnimatedOpacity from={0} to={1} duration={500}>
-      <div>Faded In Content</div>
-    </AnimatedOpacity>
-  );
-};
-```
-
-## Contributing
-
-Feel free to open issues or pull requests if you want to contribute to the project. We're always open to suggestions, bug fixes, and new feature requests.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

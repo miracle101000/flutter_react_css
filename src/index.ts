@@ -24,6 +24,7 @@ export { default as AnimatedContainer } from "./components/AnimatedContainer";
 export { default as AnimatedRotation } from "./components/AnimatedRotation";
 export { default as AnimatedScale } from "./components/AnimatedScale";
 export { default as AnimatedSlide } from "./components/AnimatedSlide";
+export { default as AnimatedFractionallySizedBox} from "./components/AnimatedFractionallySizedBox";
 export { default as FittedBox } from "./components/FittedBox";
 export { default as Transform } from "./components/Transform";
 export { default as TransformRotate } from "./components/TransformRotate";

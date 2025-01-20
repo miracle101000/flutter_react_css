@@ -41,6 +41,7 @@ This library provides a wide range of UI components that you can import and use 
 - **AnimatedRotation**: A component that applies an animated rotation.
 - **AnimatedScale**: A component that applies an animated scaling effect.
 - **AnimatedSlide**: A component that animates the sliding of an element.
+- **AnimatedFractionallySizedBox**: A component that animates the resizing of its children based on a fraction of the parent container's width and height.
 - **FittedBox**: A component that scales and positions its child according to the container.
 - **Transform**: A component that applies transformations like rotate, scale, and translate.
 - **TransformRotate**: A component that applies a rotation transformation.

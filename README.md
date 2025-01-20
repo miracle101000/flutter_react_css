@@ -77,7 +77,7 @@ import {
   Column,
   TextField,
   ElevatedButton,
-} from "your-component-library";
+} from "flutter_react_css";
 
 const MyApp = () => {
   return (

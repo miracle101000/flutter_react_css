@@ -5,6 +5,7 @@ Welcome to the **Flutter CSS Library**, a collection of versatile UI components 
 ## 🎉 **What's New:**
 
 - **New Components Added!**
+
   - 📝 **Text**: Easily display styled text in your app.
   - 🏃‍♂️ **AnimatedPadding**: Add animated padding transitions to your elements.
   - 📏 **ConstrainedBox**: Apply constraints to children (like width or height) within your layout.
@@ -15,6 +16,9 @@ Welcome to the **Flutter CSS Library**, a collection of versatile UI components 
   - 🧑‍💻 **NestedScrollView**: A scroll view that supports nested scrolling views.
   - 🔨 **CustomScrollView**: A scroll view that allows for custom scrollable layouts.
   - 🧳 **LimitedBox**: A box that limits its size when unconstrained.
+  - 🔥 **AnimatedPositioned**: A component to animate the positioning of an element.
+  - 🔥 **AnimatedPositionedDirectional**: A component to animate directional positioning of an element.
+
 - **RichText Enhancements!**
   - 🎨 Added more **style properties** to the **RichText** component for deeper customization of your text styling.
   - 📅 Added an **onEnd** callback to **AnimatedComponents** for handling animation completion.
@@ -50,6 +54,8 @@ This library offers a wide variety of UI components, neatly categorized for easi
 - **NestedScrollView**: A scroll view supporting nested scrollable elements.
 - **CustomScrollView**: A customizable scroll view for complex layouts.
 - **LimitedBox**: A box that limits its size when unconstrained.
+- **AnimatedPositioned**: A component that animates the positioning of an element.
+- **AnimatedPositionedDirectional**: A component that animates the directional positioning of an element.
 
 ### 📝 **Form Components**
 
@@ -102,64 +108,79 @@ This library offers a wide variety of UI components, neatly categorized for easi
 
 ```tsx
 import {
-  Container,
-  Row,
-  Column,
-  TextField,
+  Stack,
+  AnimatedPositioned,
+  AnimatedPositionedDirectional,
   ElevatedButton,
-  AnimatedPadding,
-  RichText,
-  PageView,
 } from "flutter-css";
 
 const MyApp = () => {
+  const [position, setPosition] = useState({ left: 50, top: 50 });
+  const [directionalPosition, setDirectionalPosition] = useState({
+    start: 50,
+    top: 50,
+  });
+
+  const moveBox = () => {
+    setPosition({
+      left: Math.random() * 200,
+      top: Math.random() * 200,
+    });
+  };
+
+  const moveDirectionalBox = () => {
+    setDirectionalPosition({
+      start: Math.random() * 200,
+      top: Math.random() * 200,
+    });
+  };
+
   return (
-    <Scaffold>
-      <Container>
-        <Row>
-          <Column>
-            <TextField label="Enter your name" />
-            <ElevatedButton onClick={() => alert("Button clicked!")}>
-              Submit
-            </ElevatedButton>
-            <AnimatedPadding
-              padding="10px"
-              duration="1s"
-              onEnd={() => alert("Animation Ended!")}
-            >
-              <Text>Animated Padding</Text>
-            </AnimatedPadding>
-            <RichText>
-              <TextSpan
-                text="Hello"
-                textAlign="center"
-                textDirection="ltr"
-                textScaler={1.5}
-                fontSize={20}
-                fontWeight="bold"
-                lineHeight="1.5"
-                letterSpacing="0.5px"
-                maxLines={2}
-                color="blue"
-                gradient={["red", "yellow", "blue"]}
-                gradientAngle={45}
-                onTap={() => alert("Text tapped!")}
-              />
-              <TextSpan
-                text=" world!"
-                style={{ color: "red" }}
-                onTap={() => alert("World text tapped!")}
-              />
-            </RichText>
-            <PageView>
-              <div>Page 1</div>
-              <div>Page 2</div>
-              <div>Page 3</div>
-            </PageView>
-          </Column>
-        </Row>
-      </Container>
-    </Scaffold>
+    <div>
+      <ElevatedButton onClick={moveBox}>
+        Move AnimatedPositioned Box
+      </ElevatedButton>
+      <ElevatedButton onClick={moveDirectionalBox}>
+        Move AnimatedPositionedDirectional Box
+      </ElevatedButton>
+
+      <Stack
+        style={{
+          width: "300px",
+          height: "300px",
+          backgroundColor: "lightblue",
+        }}
+      >
+        <AnimatedPositioned
+          left={position.left}
+          top={position.top}
+          width={50}
+          height={50}
+          duration={500}
+          onEnd={() => console.log("Animation completed!")}
+        >
+          <div
+            style={{ backgroundColor: "red", width: "100%", height: "100%" }}
+          />
+        </AnimatedPositioned>
+
+        <AnimatedPositionedDirectional
+          start={directionalPosition.start}
+          top={directionalPosition.top}
+          width={50}
+          height={50}
+          duration={500}
+          direction="ltr"
+          onEnd={() => console.log("Directional Animation completed!")}
+        >
+          <div
+            style={{ backgroundColor: "blue", width: "100%", height: "100%" }}
+          />
+        </AnimatedPositionedDirectional>
+      </Stack>
+    </div>
   );
 };
+
+export default MyApp;
 ```

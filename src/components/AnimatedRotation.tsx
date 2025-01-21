@@ -4,6 +4,7 @@ interface AnimatedRotationProps {
   turns: number; // The number of 360-degree rotations
   duration: number; // Duration of the animation in milliseconds
   children: React.ReactNode;
+  onEnd?: () => void;
 }
 
 /**
@@ -13,7 +14,7 @@ interface AnimatedRotationProps {
  *
  * Example usage:
  * ```tsx
- * <AnimatedRotation turns={2} duration={1000}>
+ * <AnimatedRotation turns={2} duration={1000} onEnd={() => console.log('Animation complete')}>
  *   <div style={{ width: '100px', height: '100px', backgroundColor: 'red' }} />
  * </AnimatedRotation>
  * ```
@@ -22,11 +23,13 @@ interface AnimatedRotationProps {
  * - `turns`: The number of turns (full 360-degree rotations) that the content should make. For example, `1` means one full rotation, `2` means two full rotations, etc.
  * - `duration`: The time (in milliseconds) it takes for the rotation to complete.
  * - `children`: The content to be rendered and animated with the rotation effect.
+ * - `onEnd`: A callback function triggered when the animation completes.
  */
 const AnimatedRotation: React.FC<AnimatedRotationProps> = ({
   turns,
   duration,
   children,
+  onEnd,
 }) => {
   const [rotationAngle, setRotationAngle] = useState(0);
 
@@ -36,6 +39,24 @@ const AnimatedRotation: React.FC<AnimatedRotationProps> = ({
     setRotationAngle(angle);
   }, [turns]);
 
+  useEffect(() => {
+    if (onEnd) {
+      // Attach a listener for the transition end event
+      const handleTransitionEnd = () => {
+        onEnd();
+      };
+
+      // Get the div element and add the event listener
+      const element = document.getElementById("animated-rotation");
+      element?.addEventListener("transitionend", handleTransitionEnd);
+
+      // Cleanup the event listener when the component is unmounted or turns changes
+      return () => {
+        element?.removeEventListener("transitionend", handleTransitionEnd);
+      };
+    }
+  }, [onEnd]);
+
   // Define the CSS for the animated rotation
   const animatedStyle: React.CSSProperties = {
     transform: `rotate(${rotationAngle}deg)`,
@@ -43,7 +64,11 @@ const AnimatedRotation: React.FC<AnimatedRotationProps> = ({
     display: "inline-block", // Ensures the element behaves as a block while allowing transform
   };
 
-  return <div style={animatedStyle}>{children}</div>;
+  return (
+    <div id="animated-rotation" style={animatedStyle}>
+      {children}
+    </div>
+  );
 };
 
 export default AnimatedRotation;

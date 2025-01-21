@@ -6,6 +6,7 @@ interface AnimatedFractionallySizedBoxProps {
   heightFactor?: number;
   children: ReactElement<any>; // Enforce single ReactElement with any props
   duration?: string;
+  onEnd?: () => void;
 }
 
 /**
@@ -18,7 +19,7 @@ interface AnimatedFractionallySizedBoxProps {
  *
  * **Example usage:**
  * ```tsx
- * <AnimatedFractionallySizedBox widthFactor={0.5} heightFactor={0.3}>
+ * <AnimatedFractionallySizedBox widthFactor={0.5} heightFactor={0.3} onEnd={() => console.log('Animation complete')} >
  *   <div>Animated Content</div>
  * </AnimatedFractionallySizedBox>
  * ```
@@ -27,11 +28,18 @@ interface AnimatedFractionallySizedBoxProps {
  * - `widthFactor`: The fraction of the parent container's width to apply (default is `1` for full width).
  * - `heightFactor`: The fraction of the parent container's height to apply (default is `1` for full height).
  * - `children`: The content to be sized and animated.
+ * - `onEnd`: A callback function triggered when the animation completes.
  * - `duration`: The duration of the animation (default is `"0.3s"`), allowing customization of how fast the resizing occurs.
  */
 const AnimatedFractionallySizedBox: React.FC<
   AnimatedFractionallySizedBoxProps
-> = ({ widthFactor = 1, heightFactor = 1, children, duration = "0.3s" }) => {
+> = ({
+  widthFactor = 1,
+  heightFactor = 1,
+  children,
+  onEnd,
+  duration = "0.3s",
+}) => {
   const parentRef = useRef<HTMLDivElement | null>(null);
   const [parentSize, setParentSize] = useState({ width: 0, height: 0 });
 
@@ -52,10 +60,14 @@ const AnimatedFractionallySizedBox: React.FC<
     }
   }, []);
 
+  // Convert duration to milliseconds
+  const durationInMs = parseFloat(duration) * 1000;
+
   const { width, height } = useSpring({
     width: parentSize.width * widthFactor,
     height: parentSize.height * heightFactor,
-    config: { tension: 170, friction: 26 },
+    config: { tension: 170, friction: 26, duration: durationInMs }, // Use duration here
+    onRest: onEnd,
   });
 
   // Explicitly type the style for animated.div

@@ -1,8 +1,25 @@
-## Components
+# 🚀 **Flutter React CSS Library**
 
-This library provides a wide range of UI components that you can import and use in your React projects. These components are designed to be flexible and modular, making it easy to build responsive and dynamic user interfaces.
+Welcome to the **Flutter React CSS Library**, a collection of versatile UI components designed to bring the power of Flutter's layout and styling system into React! These components are flexible, modular, and easy to integrate into your React projects, enabling you to create responsive and dynamic user interfaces.
 
-### Layout Components
+## 🎉 **What's New:**
+
+- **New Components Added!**
+  - 📝 **Text**: Easily display styled text in your app.
+  - 🏃‍♂️ **AnimatedPadding**: Add animated padding transitions to your elements.
+  - 📏 **ConstrainedBox**: Apply constraints to children (like width or height) within your layout.
+  - ❌ **IgnorePointer**: Prevent user interactions with an element and its children.
+- **RichText Enhancements!**
+  - 🎨 Added more **style properties** to the **RichText** component for deeper customization of your text styling.
+  - 📅 Added an **onEnd** callback to **AnimatedComponents** for handling animation completion.
+
+---
+
+## 🧩 **Components**
+
+This library offers a wide variety of UI components, neatly categorized for easier integration into your projects:
+
+### 🏗️ **Layout Components**
 
 - **Scaffold**: A basic layout wrapper for a complete page.
 - **Container**: A container component that adds padding and centers content.
@@ -22,7 +39,7 @@ This library provides a wide range of UI components that you can import and use 
 - **GridViewBuilder**: A grid layout that builds its items dynamically.
 - **GridViewCount**: A grid layout with a fixed number of items per row.
 
-### Form Components
+### 📝 **Form Components**
 
 - **TextField**: A text input field for user input.
 - **Switch**: A switch that toggles between two states.
@@ -31,7 +48,7 @@ This library provides a wide range of UI components that you can import and use 
 - **ElevatedButton**: A button with an elevated shadow.
 - **CupertinoButton**: A button styled to follow Apple's design system.
 
-### Visual Components
+### 🌈 **Visual Components**
 
 - **Carousel**: A carousel component to display a collection of items.
 - **RotatedBox**: A component that rotates its child.
@@ -50,7 +67,7 @@ This library provides a wide range of UI components that you can import and use 
 - **AspectRatio**: A component to enforce a specific aspect ratio for its child.
 - **FractionallySizedBox**: A component that sizes its child based on a fraction of the parent container.
 
-### Utility Components
+### 🔧 **Utility Components**
 
 - **Divider**: A horizontal line used to separate content.
 - **ClipRRect**: A component to clip its child with rounded corners.
@@ -58,18 +75,18 @@ This library provides a wide range of UI components that you can import and use 
 - **Align**: A component that aligns its child within a container.
 - **CircularProgressIndicator**: A spinner indicating loading or processing.
 - **CircleAvatar**: A circular avatar image component.
-- **Reoderable**: A component for reordering its children.
-- **RichText**: A component to display styled text.
+- **Reorderable**: A component for reordering its children.
+- **RichText**: A component to display styled text (now with more style options!).
 - **Spacer**: A flexible spacer component that creates space between components.
 - **Expanded**: A component that expands to fill available space.
 
-### App Components
+### 📱 **App Components**
 
 - **AppBar**: A top app bar typically used for navigation and actions.
 
 ---
 
-### Example Usage:
+### 🔥 **Example Usage:**
 
 ```tsx
 import {
@@ -78,6 +95,8 @@ import {
   Column,
   TextField,
   ElevatedButton,
+  AnimatedPadding,
+  RichText,
 } from "flutter_react_css";
 
 const MyApp = () => {
@@ -90,6 +109,35 @@ const MyApp = () => {
             <ElevatedButton onClick={() => alert("Button clicked!")}>
               Submit
             </ElevatedButton>
+            <AnimatedPadding
+              padding="10px"
+              duration="1s"
+              onEnd={() => alert("Animation Ended!")}
+            >
+              <Text>Animated Padding</Text>
+            </AnimatedPadding>
+            <RichText>
+              <TextSpan
+                text="Hello"
+                textAlign="center"
+                textDirection="ltr"
+                textScaler={1.5}
+                fontSize={20}
+                fontWeight="bold"
+                lineHeight="1.5"
+                letterSpacing="0.5px"
+                maxLines={2}
+                color="blue"
+                gradient={["red", "yellow", "blue"]}
+                gradientAngle={45}
+                onTap={() => alert("Text tapped!")}
+              />
+              <TextSpan
+                text=" world!"
+                style={{ color: "red" }}
+                onTap={() => alert("World text tapped!")}
+              />
+            </RichText>
           </Column>
         </Row>
       </Container>
@@ -97,3 +145,14 @@ const MyApp = () => {
   );
 };
 ```
+
+---
+
+### ✨ **New Features at a Glance:**
+
+- **Text** component added for easy inline text rendering.
+- **AnimatedPadding** for smooth padding transitions with an `onEnd` callback! 🎉
+- **ConstrainedBox** allows you to apply custom size constraints. 📏
+- **IgnorePointer** to disable user interactions with specific elements. ❌
+- **RichText** now supports more **style properties** for ultimate flexibility. 🎨
+- **Animated Components** have an **onEnd** callback to handle animation completion. 📅

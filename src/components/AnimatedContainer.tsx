@@ -48,6 +48,7 @@ type AnimatedContainerProps = {
   animationDuration?: number; // Added to control the duration of the animation
   transform?: string; // Added for transform animations
   borderThickness?: string | number; // Border thickness (new)
+  onEnd?: () => void; // Callback function triggered when the animation ends
 };
 
 /**
@@ -68,6 +69,7 @@ type AnimatedContainerProps = {
  *   shadow="md"
  *   width="300px"
  *   height="200px"
+ *   onEnd={() => console.log('Animation complete')}
  * >
  *   <h1 style={{ textAlign: 'center' }}>Hello World</h1>
  * </AnimatedContainer>
@@ -116,6 +118,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   animationDuration = 500, // Default to 500ms
   transform, // Added transform prop
   borderThickness = 1, // Default border thickness
+  onEnd,
   ...props
 }) => {
   const theme = useTheme();
@@ -228,6 +231,7 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
       duration: animationDuration, // Control the duration of the animation
       easing: easeCubicInOut, // Optional easing function
     },
+    onRest: onEnd, // Trigger the `onEnd` callback when animation completes
   });
 
   return React.createElement(as, {

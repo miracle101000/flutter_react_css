@@ -1,57 +1,117 @@
 import React from "react";
 
+// WidgetSpan for embedding inline widgets (e.g., images, buttons)
 interface WidgetSpanProps {
   children: React.ReactNode;
 }
 
-/**
- * The `WidgetSpan` component allows React components or widgets to be embedded inline
- * with text content, similar to Flutter's `WidgetSpan`. This is useful for integrating
- * interactive elements or complex components within a line of text.
- *
- * The component uses `display: inline-block` to ensure it behaves as an inline element
- * while allowing complex React components to be embedded.
- *
- * @param children - The child elements or React components to render inline with text.
- *
- * Example usage:
- * ```tsx
- * <WidgetSpan>
- *   <div style={{ width: 50, height: 50, backgroundColor: 'red' }} />
- * </WidgetSpan>
- * ```
- */
 const WidgetSpan: React.FC<WidgetSpanProps> = ({ children }) => {
   return <span style={{ display: "inline-block" }}>{children}</span>;
 };
 
-// TextSpan component for rendering text with specific styles.
+// TextSpan component for rendering text with specific styles and handling tap gestures.
 interface TextSpanProps {
   text?: string;
   style?: React.CSSProperties;
   children?: React.ReactNode;
+  onTap?: () => void; // Added onTap for handling tap gestures
+
+  // Text styling properties
+  textAlign?: "left" | "right" | "center" | "justify";
+  textDirection?: "ltr" | "rtl";
+  textScaler?: number;
+  fontSize?: number;
+  fontWeight?: "normal" | "bold" | "bolder" | "lighter";
+  lineHeight?: string | number;
+  letterSpacing?: string | number;
+  maxLines?: number;
+  color?: string; // Replaced selectionColor with color
+  gradient?: string[];
+  gradientAngle?: number;
 }
 
 /**
- * The `TextSpan` component renders a span of text with optional custom styling.
- * It can be used to apply styles to specific sections of text, or to combine text
- * with other inline elements such as components or widgets.
+ * The `TextSpan` component renders text with optional custom styling and an onTap handler.
+ * It can be used to apply styles to specific sections of text or to combine text with
+ * other inline elements such as components or widgets.
  *
  * @param text - The text content to display within the span (optional).
  * @param style - Optional custom CSS styles to apply to the text.
  * @param children - Optional child elements that can be rendered alongside the text.
+ * @param onTap - Optional function to handle tap gestures on the text.
  *
  * Example usage:
  * ```tsx
- * <TextSpan text="Hello" style={{ fontWeight: 'bold' }} />
- * <TextSpan>
- *   <span style={{ color: 'blue' }}>World</span>
- * </TextSpan>
+ * <TextSpan
+ *   text="Hello"
+ *   textAlign="center"
+ *   textDirection="ltr"
+ *   textScaler={1.5}
+ *   fontSize={20}
+ *   fontWeight="bold"
+ *   lineHeight="1.5"
+ *   letterSpacing="0.5px"
+ *   maxLines={2}
+ *   color="blue"
+ *   gradient={['red', 'yellow', 'blue']}
+ *   gradientAngle={45}
+ *   onTap={() => alert("Text tapped!")}
+ * />
+ * <TextSpan
+ *   text=" world!"
+ *   style={{ color: 'red' }}
+ *   onTap={() => alert("World text tapped!")}
+ * />
  * ```
  */
-const TextSpan: React.FC<TextSpanProps> = ({ text, style, children }) => {
+const TextSpan: React.FC<TextSpanProps> = ({
+  text,
+  style,
+  children,
+  onTap,
+  textAlign = "left",
+  textDirection = "ltr",
+  textScaler = 1,
+  fontSize,
+  fontWeight,
+  lineHeight,
+  letterSpacing,
+  maxLines,
+  color = "black", // Default color is black if not provided
+  gradient,
+  gradientAngle = 0,
+}) => {
+  const handleTap = () => {
+    if (onTap) {
+      onTap(); // Execute the onTap function when the span is tapped
+    }
+  };
+
+  // Prepare the gradient background if the gradient prop is provided
+  const gradientBackground = gradient
+    ? `linear-gradient(${gradientAngle}deg, ${gradient.join(", ")})`
+    : undefined;
+
+  // Merging all styles, including dynamic ones based on props
+  const textStyle: React.CSSProperties = {
+    ...style,
+    textAlign,
+    direction: textDirection,
+    fontSize: fontSize ? `${fontSize}px` : `${textScaler}rem`,
+    fontWeight,
+    lineHeight,
+    letterSpacing,
+    maxWidth: maxLines ? "100%" : undefined, // Enforcing maxLines logic
+    background: gradientBackground,
+    backgroundClip: gradient ? "text" : undefined,
+    WebkitBackgroundClip: gradient ? "text" : undefined,
+    WebkitTextFillColor: gradient ? "transparent" : undefined,
+    color, // Apply the text color
+    cursor: onTap ? "pointer" : "default", // Show pointer if onTap is provided
+  };
+
   return (
-    <span style={style}>
+    <span style={textStyle} onClick={handleTap}>
       {text}
       {children}
     </span>
@@ -72,8 +132,26 @@ interface RichTextProps {
  * Example usage:
  * ```tsx
  * <RichText>
- *   <TextSpan text="Hello" style={{ fontWeight: 'bold' }} />
- *   <TextSpan text=" world!" style={{ color: 'red' }} />
+ *   <TextSpan
+ *     text="Hello"
+ *     textAlign="center"
+ *     textDirection="ltr"
+ *     textScaler={1.5}
+ *     fontSize={20}
+ *     fontWeight="bold"
+ *     lineHeight="1.5"
+ *     letterSpacing="0.5px"
+ *     maxLines={2}
+ *     color="blue"
+ *     gradient={['red', 'yellow', 'blue']}
+ *     gradientAngle={45}
+ *     onTap={() => alert("Hello text tapped!")}
+ *   />
+ *   <TextSpan
+ *     text=" world!"
+ *     style={{ color: 'red' }}
+ *     onTap={() => alert("World text tapped!")}
+ *   />
  * </RichText>
  * ```
  */

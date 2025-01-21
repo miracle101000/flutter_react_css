@@ -59,4 +59,6 @@ export { default as PageViewBuilder} from "./components/PageViewBuilder";
 export { default as PageViewCustom} from "./components/PageViewCustom";
 export { default as CustomScrollView} from "./components/CustomScrollView";
 export { default as NestedScrollView} from "./components/NestedScrollView";
+export { default as TextEditingController } from './components/TextEditingController'; // Ensure this path is correct
+
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import TextEditingController from "./TextEditingController";
 
 type TextFieldProps = {
   /** The value of the input */
@@ -67,6 +68,8 @@ type TextFieldProps = {
   outlined?: boolean;
   /** The input should be underlined */
   underlined?: boolean;
+  /**Optionally, a controller to manage the input value */
+  textEditingController?: typeof TextEditingController;
 };
 
 /**
@@ -86,9 +89,18 @@ type TextFieldProps = {
  *   suffixIcon={<i className="fa fa-check" />}
  *   style={{ margin: "10px 0" }}
  * />
+ *
+ * // Using TextEditingController
+ * const textEditingController = new TextEditingController("Initial Value");
+ *
+ * <TextField
+ *   textEditingController={textEditingController}
+ *   onChange={(newValue) => console.log(newValue)}
+ *   label="Controlled Input"
+ *   placeholder="Enter text"
+ * />
  * ```
  */
-
 const TextField: React.FC<TextFieldProps> = ({
   value,
   onChange,
@@ -122,6 +134,7 @@ const TextField: React.FC<TextFieldProps> = ({
   keyboardType = "text",
   outlined = false,
   underlined = false,
+  textEditingController,
 }: TextFieldProps) => {
   const [inputValue, setInputValue] = useState(value);
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -129,8 +142,24 @@ const TextField: React.FC<TextFieldProps> = ({
   const textAreaRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
-    setInputValue(value);
-  }, [value]);
+    if (textEditingController) {
+      const handleControllerChange = (newValue: string) => {
+        setInputValue(newValue);
+      };
+      // Add a listener to the controller to update the input value when the controller's value changes
+      textEditingController.addListener(handleControllerChange);
+
+      // Initialize the input value with the controller's current value
+      setInputValue(textEditingController.value);
+
+      // Cleanup the listener on component unmount
+      return () => {
+        textEditingController.removeListener(handleControllerChange);
+      };
+    } else {
+      setInputValue(value);
+    }
+  }, [textEditingController, value]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -138,6 +167,10 @@ const TextField: React.FC<TextFieldProps> = ({
     const newValue = e.target.value;
     setInputValue(newValue);
     onChange(newValue);
+
+    if (textEditingController) {
+      textEditingController.value = newValue; // If a controller is provided, update its value
+    }
 
     if (validator) {
       const errorMessage = validator(newValue);

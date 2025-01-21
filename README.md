@@ -1,6 +1,6 @@
-# 🚀 **Flutter React CSS Library**
+# 🚀 **Flutter CSS Library**
 
-Welcome to the **Flutter React CSS Library**, a collection of versatile UI components designed to bring the power of Flutter's layout and styling system into React! These components are flexible, modular, and easy to integrate into your React projects, enabling you to create responsive and dynamic user interfaces.
+Welcome to the **Flutter CSS Library**, a collection of versatile UI components designed to bring the power of Flutter's layout and styling system into React! These components are flexible, modular, and easy to integrate into your React projects, enabling you to create responsive and dynamic user interfaces.
 
 ## 🎉 **What's New:**
 

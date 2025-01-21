@@ -52,4 +52,9 @@ export { default as Spacer} from "./components/Spacer";
 export { default as Expanded} from "./components/Expanded";
 export { default as ConstrainedBox} from "./components/ConstrainedBox";
 export { default as IgnorePointer} from "./components/IgnorePointer";
+export { default as PageView} from "./components/PageView";
+export { default as PageViewBuilder} from "./components/PageViewBuilder";
+export { default as PageViewCustom} from "./components/PageViewCustom";
+export { default as CustomScrollView} from "./components/CustomScrollView";
+export { default as NestedScrollView} from "./components/NestedScrollView";
 

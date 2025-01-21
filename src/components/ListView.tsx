@@ -16,6 +16,8 @@ type ListViewProps = {
   physics?: ScrollPhysics;
   /** Optional callback for getting the scroll controller */
   scrollControllerRef?: React.Ref<ScrollController>;
+  /** Reverses the scroll direction */
+  reverse?: boolean; // New reverse property
 };
 
 /** Scroll controller interface */
@@ -41,6 +43,7 @@ interface ScrollController {
  *   physics="auto"
  *   style={{ padding: "10px" }}
  *   className="my-list"
+ *   reverse={true}
  * >
  *   <div>Item 1</div>
  *   <div>Item 2</div>
@@ -57,6 +60,7 @@ interface ScrollController {
  *   - `"clamped"`: Applies a clamped overflow behavior, typically for vertical scrolling.
  * - `style`: Additional inline styles to apply to the `ListView`. These styles will override the default ones if provided.
  * - `className`: An optional CSS class to apply custom styles to the component.
+ * - `reverse`: If `true`, reverses the order of the list items, making the scroll appear in the opposite direction.
  *
  * This component provides a simple way to create flexible lists with different scrolling behaviors.
  * It's particularly useful for creating scrollable containers for lists, items, and galleries that
@@ -71,6 +75,7 @@ const ListView = forwardRef<ScrollController, ListViewProps>(
       scrollDirection = "vertical",
       physics = "clamped",
       scrollControllerRef,
+      reverse = false, // Default to false if not provided
     },
     ref
   ) => {
@@ -118,6 +123,11 @@ const ListView = forwardRef<ScrollController, ListViewProps>(
       },
     }));
 
+    // Reverse the children if reverse is true
+    const reversedChildren = reverse
+      ? React.Children.toArray(children).reverse()
+      : children;
+
     return (
       <div
         ref={listRef}
@@ -126,9 +136,11 @@ const ListView = forwardRef<ScrollController, ListViewProps>(
           ...style,
           display: scrollDirection === "horizontal" ? "flex" : "block",
           [overflowStyle]: physicsStyle,
+          flexDirection:
+            scrollDirection === "horizontal" && reverse ? "row-reverse" : "row",
         }}
       >
-        {children}
+        {reversedChildren}
       </div>
     );
   }

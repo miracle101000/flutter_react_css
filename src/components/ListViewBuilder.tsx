@@ -18,6 +18,8 @@ type ListViewBuilderProps = {
   physics?: ScrollPhysics;
   /** Optional callback for getting the scroll controller */
   scrollControllerRef?: React.Ref<ScrollController>;
+  /** Reverse the order of the list items */
+  reverse?: boolean; // New reverse property
 };
 
 /** Scroll controller interface */
@@ -44,6 +46,7 @@ interface ScrollController {
  *   itemBuilder={(index) => <div>Item {index + 1}</div>}
  *   scrollDirection="horizontal"
  *   physics="auto"
+ *   reverse={true} // Reverse the order
  *   style={{ padding: "10px" }}
  *   className="my-list"
  * />
@@ -59,6 +62,7 @@ interface ScrollController {
  *   - `"auto"`: Allows scrolling when content overflows.
  *   - `"never"`: Prevents scrolling when content overflows.
  *   - `"clamped"`: Applies a clamped overflow behavior, typically for vertical scrolling.
+ * - `reverse`: If `true`, the items will be rendered in reverse order.
  * - `style`: Additional inline styles to apply to the `ListViewBuilder`. These styles will override the default ones if provided.
  * - `className`: An optional CSS class to apply custom styles to the component.
  *
@@ -75,6 +79,7 @@ const ListViewBuilder = forwardRef<ScrollController, ListViewBuilderProps>(
     scrollDirection = "vertical",
     physics = "clamped",
     scrollControllerRef,
+    reverse = false, // Default value is false (do not reverse)
   }) => {
     const listRef = useRef<HTMLDivElement>(null);
 
@@ -120,6 +125,12 @@ const ListViewBuilder = forwardRef<ScrollController, ListViewBuilderProps>(
       },
     }));
 
+    // Reversing the order of the items based on the `reverse` prop
+    const items = Array.from({ length: itemCount }, (_, index) => (
+      <div key={index}>{itemBuilder(index)}</div>
+    ));
+    const reversedItems = reverse ? [...items].reverse() : items;
+
     return (
       <div
         ref={listRef}
@@ -130,11 +141,7 @@ const ListViewBuilder = forwardRef<ScrollController, ListViewBuilderProps>(
           [overflowStyle]: physicsStyle,
         }}
       >
-        {Array.from({ length: itemCount }, (_, index) => (
-          <div key={index}>
-            {itemBuilder(index)} {/* Render each item using the itemBuilder */}
-          </div>
-        ))}
+        {reversedItems} {/* Render the items (possibly reversed) */}
       </div>
     );
   }
